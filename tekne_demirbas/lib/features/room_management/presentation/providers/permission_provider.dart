@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tekne_demirbas/features/authentication/data/auth_repository.dart';
-import 'package:tekne_demirbas/features/room_management/data/room_repository.dart';
-import 'package:tekne_demirbas/features/room_management/domain/permission.dart';
-import 'package:tekne_demirbas/features/room_management/presentation/providers/selected_room_provider.dart';
+import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
+import 'package:ancyra_sailing/features/room_management/data/room_repository.dart';
+import 'package:ancyra_sailing/features/room_management/domain/permission.dart';
+import 'package:ancyra_sailing/features/room_management/presentation/providers/selected_room_provider.dart';
 
 /// Kullanıcının admin olup olmadığını kontrol eden provider
 /// Firestore'daki users koleksiyonundaki isAdmin alanını okur

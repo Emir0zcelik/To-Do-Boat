@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tekne_demirbas/features/task_management/data/firestore_repository.dart';
-import 'package:tekne_demirbas/features/task_management/data/storage_repository.dart';
-import 'package:tekne_demirbas/features/task_management/domain/task.dart';
-import 'package:tekne_demirbas/routes/routes.dart';
+import 'package:ancyra_sailing/features/task_management/data/firestore_repository.dart';
+import 'package:ancyra_sailing/features/task_management/data/storage_repository.dart';
+import 'package:ancyra_sailing/features/task_management/domain/task.dart';
+import 'package:ancyra_sailing/routes/routes.dart';
 
 part 'firestore_controller.g.dart';
 

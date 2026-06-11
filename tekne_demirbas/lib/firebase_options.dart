@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '420256405072',
     projectId: 'teknedemirbas',
     storageBucket: 'teknedemirbas.firebasestorage.app',
-    iosBundleId: 'com.example.tekneDemirbas',
+    iosBundleId: 'com.example.ancyraSailing',
   );
 }

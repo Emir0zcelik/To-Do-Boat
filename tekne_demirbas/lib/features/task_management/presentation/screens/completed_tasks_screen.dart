@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tekne_demirbas/common_widgets/async_value_ui.dart';
-import 'package:tekne_demirbas/common_widgets/async_value_widget.dart';
-import 'package:tekne_demirbas/features/authentication/data/auth_repository.dart';
-import 'package:tekne_demirbas/features/room_management/presentation/providers/selected_room_provider.dart';
-import 'package:tekne_demirbas/features/task_management/data/firestore_repository.dart';
-import 'package:tekne_demirbas/features/task_management/domain/task.dart';
-import 'package:tekne_demirbas/features/task_management/presentation/providers/task_filter_provider.dart';
-import 'package:tekne_demirbas/features/task_management/presentation/widgets/task_item.dart';
-import 'package:tekne_demirbas/features/task_management/presentation/widgets/filter_bar.dart';
-import 'package:tekne_demirbas/l10n/app_translations.dart';
-import 'package:tekne_demirbas/utils/appstyles.dart';
+import 'package:ancyra_sailing/common_widgets/async_value_ui.dart';
+import 'package:ancyra_sailing/common_widgets/async_value_widget.dart';
+import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
+import 'package:ancyra_sailing/features/room_management/presentation/providers/selected_room_provider.dart';
+import 'package:ancyra_sailing/features/task_management/data/firestore_repository.dart';
+import 'package:ancyra_sailing/features/task_management/domain/task.dart';
+import 'package:ancyra_sailing/features/task_management/presentation/providers/task_filter_provider.dart';
+import 'package:ancyra_sailing/features/task_management/presentation/widgets/task_item.dart';
+import 'package:ancyra_sailing/features/task_management/presentation/widgets/filter_bar.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
 
 class CompletedTasksScreen extends ConsumerWidget {
   const CompletedTasksScreen({super.key});

@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tekne_demirbas/features/room_management/domain/room.dart';
-import 'package:tekne_demirbas/features/room_management/domain/room_request.dart';
-import 'package:tekne_demirbas/features/room_management/domain/permission.dart';
+import 'package:ancyra_sailing/features/room_management/domain/room.dart';
+import 'package:ancyra_sailing/features/room_management/domain/room_request.dart';
+import 'package:ancyra_sailing/features/room_management/domain/permission.dart';
 
 part 'room_repository.g.dart';
 

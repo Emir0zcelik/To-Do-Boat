@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:tekne_demirbas/features/task_management/domain/task.dart';
-import 'package:tekne_demirbas/features/task_management/domain/boat_type.dart';
-import 'package:tekne_demirbas/features/task_management/domain/task_type.dart';
-import 'package:tekne_demirbas/features/task_management/domain/task_filter.dart';
-import 'package:tekne_demirbas/features/task_management/presentation/providers/task_filter_provider.dart';
+import 'package:ancyra_sailing/features/task_management/domain/task.dart';
+import 'package:ancyra_sailing/features/task_management/domain/boat_type.dart';
+import 'package:ancyra_sailing/features/task_management/domain/task_type.dart';
+import 'package:ancyra_sailing/features/task_management/domain/task_filter.dart';
+import 'package:ancyra_sailing/features/task_management/presentation/providers/task_filter_provider.dart';
 
 part 'firestore_repository.g.dart';
 

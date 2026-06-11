@@ -3,12 +3,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:tekne_demirbas/features/authentication/presentation/screens/register_screen.dart';
-import 'package:tekne_demirbas/features/authentication/presentation/screens/sign_in_screen.dart';
-import 'package:tekne_demirbas/features/authentication/presentation/screens/splash_screen.dart';
-import 'package:tekne_demirbas/features/room_management/presentation/screens/room_selection_screen.dart';
-import 'package:tekne_demirbas/features/task_management/presentation/screens/main_screen.dart';
-import 'package:tekne_demirbas/routes/go_router_refresh_stream.dart';
+import 'package:ancyra_sailing/features/authentication/presentation/screens/register_screen.dart';
+import 'package:ancyra_sailing/features/authentication/presentation/screens/sign_in_screen.dart';
+import 'package:ancyra_sailing/features/authentication/presentation/screens/splash_screen.dart';
+import 'package:ancyra_sailing/features/room_management/presentation/screens/room_selection_screen.dart';
+import 'package:ancyra_sailing/features/task_management/presentation/screens/main_screen.dart';
+import 'package:ancyra_sailing/routes/go_router_refresh_stream.dart';
 
 part 'routes.g.dart';
 

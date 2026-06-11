@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tekne_demirbas/features/authentication/data/auth_repository.dart';
-import 'package:tekne_demirbas/features/room_management/data/room_repository.dart';
-import 'package:tekne_demirbas/features/room_management/domain/permission.dart';
-import 'package:tekne_demirbas/features/room_management/domain/room.dart';
-import 'package:tekne_demirbas/l10n/app_translations.dart';
+import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
+import 'package:ancyra_sailing/features/room_management/data/room_repository.dart';
+import 'package:ancyra_sailing/features/room_management/domain/permission.dart';
+import 'package:ancyra_sailing/features/room_management/domain/room.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
 
 class RoomManagementDialog extends ConsumerWidget {
   final String roomId;

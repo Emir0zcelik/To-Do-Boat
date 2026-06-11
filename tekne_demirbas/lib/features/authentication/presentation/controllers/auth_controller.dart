@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tekne_demirbas/features/authentication/data/auth_repository.dart';
-import 'package:tekne_demirbas/features/room_management/data/room_repository.dart';
+import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
+import 'package:ancyra_sailing/features/room_management/data/room_repository.dart';
 
 part 'auth_controller.g.dart';
 

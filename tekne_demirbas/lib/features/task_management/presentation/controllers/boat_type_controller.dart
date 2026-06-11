@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tekne_demirbas/features/task_management/data/firestore_repository.dart';
+import 'package:ancyra_sailing/features/task_management/data/firestore_repository.dart';
 
 final boatTypeControllerProvider =
     AsyncNotifierProvider<BoatTypeController, void>(BoatTypeController.new);

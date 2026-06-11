@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tekne_demirbas/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
 
 class CommonTextField extends StatelessWidget {
   const CommonTextField({

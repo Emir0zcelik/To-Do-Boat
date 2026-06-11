@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tekne_demirbas/l10n/app_locale.dart';
+import 'package:ancyra_sailing/l10n/app_locale.dart';
 
 /// Tüm arayüz metinleri için çeviriler (tr / en / ru).
 class AppTranslations {

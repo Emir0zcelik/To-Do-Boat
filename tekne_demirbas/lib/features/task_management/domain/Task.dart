@@ -1,4 +1,4 @@
-import 'package:tekne_demirbas/features/authentication/data/auth_repository.dart';
+import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
 
 class Task {
   final String id;

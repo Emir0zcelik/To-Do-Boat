@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tekne_demirbas/utils/appstyles.dart';
-import 'package:tekne_demirbas/utils/size_config.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/size_config.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -15,29 +15,14 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _boatController;
+    with SingleTickerProviderStateMixin {
   late AnimationController _waveController;
-  late Animation<double> _boatAnimation;
   late Animation<double> _waveAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    // Tekne animasyonu - yatay hareket
-    _boatController = AnimationController(
-      duration: const Duration(milliseconds: 2500),
-      vsync: this,
-    );
-
-    _boatAnimation = Tween<double>(begin: -0.2, end: 1.2)
-        .animate(CurvedAnimation(
-      parent: _boatController,
-      curve: Curves.easeInOut,
-    ));
-
-    // Dalga animasyonu - sürekli hareket
     _waveController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
@@ -50,10 +35,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       ),
     );
 
-    // Animasyonları başlat
-    _boatController.forward();
-
-    // 2.5 saniye sonra yönlendirme yap
     Timer(const Duration(milliseconds: 2500), () {
       _navigateToNextScreen();
     });
@@ -75,7 +56,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   void dispose() {
-    _boatController.dispose();
     _waveController.dispose();
     super.dispose();
   }
@@ -103,69 +83,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               ),
             ),
 
-            // Tekne animasyonu
-            AnimatedBuilder(
-              animation: Listenable.merge([_boatAnimation, _waveAnimation]),
-              builder: (context, child) {
-                final screenWidth = MediaQuery.of(context).size.width;
-                final screenHeight = MediaQuery.of(context).size.height;
-                final boatX = screenWidth * _boatAnimation.value;
-                final boatY = screenHeight * 0.6;
-                
-                // Dalga animasyonuna göre tekneyi hafifçe yukarı aşağı hareket ettir
-                final waveOffset = 5 * math.sin(_waveAnimation.value * 2 * math.pi);
-
-                return Positioned(
-                  left: boatX,
-                  top: boatY + waveOffset,
-                  child: Transform.rotate(
-                    angle: 0.05 * math.sin(_waveAnimation.value * 2 * math.pi),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.sailing,
-                        size: 50,
-                        color: Appstyles.primaryBlue,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-
             // Logo ve başlık
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(20),
                       boxShadow: Appstyles.strongShadow,
                     ),
-                    child: const Icon(
-                      Icons.sailing,
-                      size: 64,
-                      color: Appstyles.primaryBlue,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        'assets/icon/Ancyra_icon.png',
+                        width: 112,
+                        height: 112,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Tekne Demirbas',
+                    'Ancyra Sailing',
                     style: Appstyles.headingTextStyle.copyWith(
                       color: Colors.white,
                       fontSize: SizeConfig.getProportionateHeight(28),

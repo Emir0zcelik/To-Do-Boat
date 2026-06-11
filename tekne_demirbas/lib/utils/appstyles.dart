@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tekne_demirbas/utils/size_config.dart';
+import 'package:ancyra_sailing/utils/size_config.dart';
 
 class Appstyles {
   // Premium Deniz/Tekne Teması Renk Paleti

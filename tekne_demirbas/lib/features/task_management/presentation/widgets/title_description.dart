@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tekne_demirbas/utils/appstyles.dart';
-import 'package:tekne_demirbas/utils/size_config.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/size_config.dart';
 
 class TitleDescription extends StatelessWidget {
   const TitleDescription({

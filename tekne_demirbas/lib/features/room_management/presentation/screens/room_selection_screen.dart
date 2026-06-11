@@ -3,17 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tekne_demirbas/features/authentication/data/auth_repository.dart';
-import 'package:tekne_demirbas/features/room_management/data/room_repository.dart';
-import 'package:tekne_demirbas/features/room_management/domain/room.dart';
-import 'package:tekne_demirbas/features/room_management/domain/room_request.dart';
-import 'package:tekne_demirbas/features/room_management/presentation/providers/permission_provider.dart';
-import 'package:tekne_demirbas/features/room_management/presentation/providers/selected_room_provider.dart';
-import 'package:tekne_demirbas/l10n/app_locale.dart';
-import 'package:tekne_demirbas/l10n/app_translations.dart';
-import 'package:tekne_demirbas/l10n/locale_provider.dart';
-import 'package:tekne_demirbas/utils/appstyles.dart';
-import 'package:tekne_demirbas/utils/size_config.dart';
+import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
+import 'package:ancyra_sailing/features/room_management/data/room_repository.dart';
+import 'package:ancyra_sailing/features/room_management/domain/room.dart';
+import 'package:ancyra_sailing/features/room_management/domain/room_request.dart';
+import 'package:ancyra_sailing/features/room_management/presentation/providers/permission_provider.dart';
+import 'package:ancyra_sailing/features/room_management/presentation/providers/selected_room_provider.dart';
+import 'package:ancyra_sailing/l10n/app_locale.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
+import 'package:ancyra_sailing/l10n/locale_provider.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/size_config.dart';
 
 class RoomSelectionScreen extends ConsumerStatefulWidget {
   const RoomSelectionScreen({super.key});

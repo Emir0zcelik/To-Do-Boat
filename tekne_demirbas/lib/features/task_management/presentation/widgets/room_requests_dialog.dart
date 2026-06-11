@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tekne_demirbas/features/room_management/data/room_repository.dart';
-import 'package:tekne_demirbas/features/room_management/domain/room_request.dart';
-import 'package:tekne_demirbas/l10n/app_translations.dart';
+import 'package:ancyra_sailing/features/room_management/data/room_repository.dart';
+import 'package:ancyra_sailing/features/room_management/domain/room_request.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
 
 class RoomRequestsDialog extends ConsumerWidget {
   final String roomId;

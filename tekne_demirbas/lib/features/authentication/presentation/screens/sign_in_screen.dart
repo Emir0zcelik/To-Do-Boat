@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tekne_demirbas/common_widgets/async_value_ui.dart';
-import 'package:tekne_demirbas/features/authentication/presentation/controllers/auth_controller.dart';
-import 'package:tekne_demirbas/features/authentication/presentation/widgets/common_text_field.dart';
-import 'package:tekne_demirbas/features/room_management/presentation/providers/selected_room_provider.dart';
-import 'package:tekne_demirbas/l10n/app_locale.dart';
-import 'package:tekne_demirbas/l10n/app_translations.dart';
-import 'package:tekne_demirbas/l10n/locale_provider.dart';
-import 'package:tekne_demirbas/routes/routes.dart';
-import 'package:tekne_demirbas/utils/appstyles.dart';
-import 'package:tekne_demirbas/utils/size_config.dart';
+import 'package:ancyra_sailing/common_widgets/async_value_ui.dart';
+import 'package:ancyra_sailing/features/authentication/presentation/controllers/auth_controller.dart';
+import 'package:ancyra_sailing/features/authentication/presentation/widgets/auth_app_bar.dart';
+import 'package:ancyra_sailing/features/authentication/presentation/widgets/common_text_field.dart';
+import 'package:ancyra_sailing/features/room_management/presentation/providers/selected_room_provider.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
+import 'package:ancyra_sailing/routes/routes.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/size_config.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -74,44 +73,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       state.showAlertDialogOnError(context);
     });
 
-    final currentLocale = ref.watch(localeProvider);
-    final currentAppLocale = AppLocale.fromLocale(currentLocale);
-
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: const SizedBox.shrink(),
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: DropdownButton<AppLocale>(
-                value: currentAppLocale,
-                underline: const SizedBox.shrink(),
-                dropdownColor: Appstyles.white,
-                items: AppLocale.values
-                    .map((appLocale) => DropdownMenuItem<AppLocale>(
-                          value: appLocale,
-                          child: Text(
-                            appLocale.displayName,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Appstyles.primaryBlue,
-                            ),
-                          ),
-                        ))
-                    .toList(),
-                onChanged: (appLocale) async {
-                  if (appLocale != null) {
-                    await ref.read(localeProvider.notifier).setLocale(appLocale);
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
+        appBar: const AuthAppBar(),
         body: Container(
           decoration: const BoxDecoration(
             gradient: Appstyles.lightOceanGradient,
@@ -127,16 +91,18 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   children: [
                     // Logo/Icon Area
                     Container(
-                      padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: Appstyles.white,
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(20),
                         boxShadow: Appstyles.mediumShadow,
                       ),
-                      child: const Icon(
-                        Icons.sailing,
-                        size: 64,
-                        color: Appstyles.primaryBlue,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(
+                          'assets/icon/Ancyra_icon.png',
+                          width: 112,
+                          height: 112,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     SizedBox(height: SizeConfig.getProportionateHeight(32)),

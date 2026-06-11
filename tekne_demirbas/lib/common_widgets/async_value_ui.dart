@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tekne_demirbas/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
 
 extension AsyncValueUi on AsyncValue {
   void showAlertDialogOnError(BuildContext context) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:tekne_demirbas/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
 
 class EditableDropdown extends StatelessWidget {
   const EditableDropdown({
