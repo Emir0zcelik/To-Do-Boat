@@ -1642,7 +1642,9 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                               child: const Icon(Icons.pending, color: Colors.orange),
                             ),
                             title: Text(request.roomName, style: Appstyles.titleTextStyle),
-                            subtitle: Text('Beklemede', style: Appstyles.subtitleTextStyle),
+                            subtitle: Text(
+                                AppTranslations.t(context, 'pending'),
+                                style: Appstyles.subtitleTextStyle),
                           ),
                         )),
                   ],

@@ -45,5 +45,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Görevlere fotoğraf ve video eklemek için kamera erişimi gereklidir. / Camera access is required to add photos and videos to tasks.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Görevlere fotoğraf ve video eklemek için galeri erişimi gereklidir. / Photo library access is required to add photos and videos to tasks.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Video kaydederken ses için mikrofon erişimi gereklidir. / Microphone access is required for sound while recording videos.</string>
 </dict>
 </plist>

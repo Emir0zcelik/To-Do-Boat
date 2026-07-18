@@ -50,10 +50,11 @@ class RoomRequestsDialog extends ConsumerWidget {
                       .toList();
 
                   if (pendingRequests.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text('Bekleyen istek yok'),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                            AppTranslations.t(context, 'noPendingRequests')),
                       ),
                     );
                   }
@@ -69,9 +70,7 @@ class RoomRequestsDialog extends ConsumerWidget {
                               ? request.userEmail
                               : request.userId,
                         ),
-                        subtitle: Text(
-                          'İstek tarihi: ${_formatDate(request.requestedAt)}',
-                        ),
+                        subtitle: Text(_formatDate(request.requestedAt)),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -84,8 +83,9 @@ class RoomRequestsDialog extends ConsumerWidget {
                                       .approveRoomRequest(request.id, roomId);
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('İstek onaylandı'),
+                                      SnackBar(
+                                        content: Text(AppTranslations.t(
+                                            context, 'requestApproved')),
                                         backgroundColor: Colors.green,
                                       ),
                                     );
@@ -93,7 +93,9 @@ class RoomRequestsDialog extends ConsumerWidget {
                                 } catch (e) {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Hata: $e')),
+                                      SnackBar(
+                                          content: Text(
+                                              '${AppTranslations.t(context, 'errorPrefix')}: $e')),
                                     );
                                   }
                                 }
@@ -108,8 +110,9 @@ class RoomRequestsDialog extends ConsumerWidget {
                                       .rejectRoomRequest(request.id);
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('İstek reddedildi'),
+                                      SnackBar(
+                                        content: Text(AppTranslations.t(
+                                            context, 'requestRejected')),
                                         backgroundColor: Colors.orange,
                                       ),
                                     );
@@ -117,7 +120,9 @@ class RoomRequestsDialog extends ConsumerWidget {
                                 } catch (e) {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Hata: $e')),
+                                      SnackBar(
+                                          content: Text(
+                                              '${AppTranslations.t(context, 'errorPrefix')}: $e')),
                                     );
                                   }
                                 }
@@ -138,7 +143,8 @@ class RoomRequestsDialog extends ConsumerWidget {
                 error: (error, stack) => Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text('Hata: $error'),
+                    child: Text(
+                        '${AppTranslations.t(context, 'errorPrefix')}: $error'),
                   ),
                 ),
               ),

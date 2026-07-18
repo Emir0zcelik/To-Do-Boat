@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
 import 'package:ancyra_sailing/utils/appstyles.dart';
 
 extension AsyncValueUi on AsyncValue {
@@ -20,7 +21,8 @@ extension AsyncValueUi on AsyncValue {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Kapat', style: Appstyles.normalTextStyle),
+                  child: Text(AppTranslations.t(context, 'close'),
+                      style: Appstyles.normalTextStyle),
                 ),
               ],
             ),

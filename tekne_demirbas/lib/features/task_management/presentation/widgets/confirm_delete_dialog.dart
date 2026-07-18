@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
 
 Future<bool> showConfirmDeleteDialog({
   required BuildContext context,
@@ -8,21 +10,30 @@ Future<bool> showConfirmDeleteDialog({
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: Colors.grey.shade900,
-        title: const Text("Emin misin?", style: TextStyle(color: Colors.white)),
+        backgroundColor: Appstyles.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Appstyles.borderRadiusMedium),
+        ),
+        title: Text(
+          AppTranslations.t(context, 'areYouSure'),
+          style: Appstyles.titleTextStyle.copyWith(color: Appstyles.textDark),
+        ),
         content: Text(
-          "'$itemName' silinsin mi?",
-          style: const TextStyle(color: Colors.white70),
+          "'$itemName'",
+          style: Appstyles.normalTextStyle.copyWith(color: Appstyles.textDark),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text("İptal"),
+            child: Text(AppTranslations.t(context, 'cancel')),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text("Sil"),
+            child: Text(AppTranslations.t(context, 'delete')),
           ),
         ],
       );

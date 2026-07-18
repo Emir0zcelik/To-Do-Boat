@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
+import 'package:ancyra_sailing/utils/appstyles.dart';
 
 Future<String?> showAddItemDialog({
   required BuildContext context,
@@ -11,29 +13,45 @@ Future<String?> showAddItemDialog({
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: Colors.grey.shade900,
-        title: Text(title, style: const TextStyle(color: Colors.white)),
+        backgroundColor: Appstyles.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Appstyles.borderRadiusMedium),
+        ),
+        title: Text(
+          title,
+          style: Appstyles.titleTextStyle.copyWith(color: Appstyles.textDark),
+        ),
         content: TextField(
           controller: controller,
-          style: const TextStyle(color: Colors.white),
+          autofocus: true,
+          style: Appstyles.normalTextStyle.copyWith(color: Appstyles.textDark),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white54),
+            hintStyle:
+                Appstyles.normalTextStyle.copyWith(color: Appstyles.textLight),
+            border: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(Appstyles.borderRadiusSmall),
+            ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, null),
-            child: const Text("İptal"),
+            child: Text(AppTranslations.t(context, 'cancel')),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Appstyles.primaryBlue,
+              foregroundColor: Appstyles.white,
+            ),
             onPressed: () {
               final text = controller.text.trim();
               if (text.isNotEmpty) {
                 Navigator.pop(context, text);
               }
             },
-            child: const Text("Ekle"),
+            child: Text(AppTranslations.t(context, 'add')),
           ),
         ],
       );

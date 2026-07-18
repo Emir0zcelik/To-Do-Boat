@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyABEzliYeozua5Yrs4Ih6c4zzM7Xwnw2v0',
-    appId: '1:420256405072:android:e11ac53878dc8a38812355',
-    messagingSenderId: '420256405072',
-    projectId: 'teknedemirbas',
-    storageBucket: 'teknedemirbas.firebasestorage.app',
+    apiKey: 'AIzaSyDysfcRla9k-4aQRlMoJD5Z94wJ5k41Rz4',
+    appId: '1:207240695163:android:4306cd7f54312fe3da01de',
+    messagingSenderId: '207240695163',
+    projectId: 'ancyra-to-do',
+    storageBucket: 'ancyra-to-do.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC1G8GnIitkFbnvL7qsAvEnmA6JdxVIn_0',
-    appId: '1:420256405072:ios:b53eb7e9c84f1d11812355',
-    messagingSenderId: '420256405072',
-    projectId: 'teknedemirbas',
-    storageBucket: 'teknedemirbas.firebasestorage.app',
-    iosBundleId: 'com.example.ancyraSailing',
+    apiKey: 'AIzaSyBOAkEmDgYc_JjR9VWsGdmj3JWT1ewZPVc',
+    appId: '1:207240695163:ios:7be5eb379d1be457da01de',
+    messagingSenderId: '207240695163',
+    projectId: 'ancyra-to-do',
+    storageBucket: 'ancyra-to-do.firebasestorage.app',
+    iosBundleId: 'com.ancyra.todo',
   );
 }

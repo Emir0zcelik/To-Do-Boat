@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Kullanıcı profilleri: herkes okuyabilir (email/isim göstermek için),
+    // sadece kendi dokümanını yazabilir/silebilir.
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSelf(userId);
+    }
+
+    // Odalar: giriş yapmış herkes okuyabilir (oda koduyla katılım için),
+    // oluşturan yazabilir, üyeler güncelleyebilir (katılma/ayrılma),
+    // sadece sahibi silebilir.
+    match /rooms/{roomId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn()
+        && resource.data.ownerId == request.auth.uid;
+    }
+
+    // Görevler: giriş yapmış kullanıcılar okuyabilir/yazabilir.
+    match /tasks/{taskId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Tekne ve iş türleri
+    match /boat_types/{docId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /task_types/{docId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Oda izinleri ve katılım istekleri
+    match /room_permissions/{docId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /room_requests/{docId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Diğer her şey kapalı
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

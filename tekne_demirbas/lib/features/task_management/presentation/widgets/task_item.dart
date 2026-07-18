@@ -59,7 +59,12 @@ class _TaskItemState extends ConsumerState<TaskItem> {
           final taskTypeAsync = ref.watch(task_provider.taskTypesProvider);
 
           return StatefulBuilder(
-            builder: (context, setDialogState) => AlertDialog(
+            builder: (context, setDialogState) {
+              final dialogWidth = MediaQuery.sizeOf(context).width;
+              final dialogMaxHeight = MediaQuery.sizeOf(context).height * 0.55;
+
+              return AlertDialog(
+              insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -67,22 +72,29 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                 children: [
                   const Icon(Icons.edit, color: Colors.green, size: 30),
                   const SizedBox(width: 10),
-                  Text(
-                    AppTranslations.t(context, 'editTask'),
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                  Expanded(
+                    child: Text(
+                      AppTranslations.t(context, 'editTask'),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
                 ],
               ),
-              content: SingleChildScrollView(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
+              content: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: dialogWidth * 0.9,
+                  maxHeight: dialogMaxHeight,
+                ),
+                child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // Görev Adı
                       Text(
@@ -129,7 +141,6 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                           ),
                           filled: true,
                           fillColor: Colors.grey[100],
-                          prefixIcon: const Icon(Icons.description),
                         ),
                         style: const TextStyle(color: Colors.black87),
                       ),
@@ -148,8 +159,13 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       boatTypeAsync.when(
                         data: (boats) {
                           final boatNames = boats.map((b) => b.name).toList();
+                          final boatValue = selectedBoatType != null &&
+                                  boatNames.contains(selectedBoatType)
+                              ? selectedBoatType
+                              : null;
                           return DropdownButtonFormField<String>(
-                            value: selectedBoatType,
+                            isExpanded: true,
+                            value: boatValue,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -164,6 +180,8 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                 child: Text(
                                   name,
                                   style: const TextStyle(color: Colors.black87),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
                               );
                             }).toList(),
@@ -199,6 +217,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                           final validValues = ['', ...taskTypeNames];
                           final value = validValues.contains(effectiveValue) ? effectiveValue : '';
                           return DropdownButtonFormField<String>(
+                            isExpanded: true,
                             value: value,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
@@ -209,11 +228,13 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                               prefixIcon: const Icon(Icons.work),
                             ),
                             items: [
-                              const DropdownMenuItem(
+                              DropdownMenuItem(
                                 value: '',
                                 child: Text(
-                                  'İş türü seçme (opsiyonel)',
-                                  style: TextStyle(color: Colors.black87),
+                                  AppTranslations.t(context, 'taskTypeOptional'),
+                                  style: const TextStyle(color: Colors.black87),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
                               ),
                               ...taskTypeNames.map((name) {
@@ -222,6 +243,8 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                   child: Text(
                                     name,
                                     style: const TextStyle(color: Colors.black87),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
                                 );
                               }),
@@ -267,12 +290,12 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                       children: [
                                         ListTile(
                                           leading: const Icon(Icons.photo, color: Appstyles.primaryBlue),
-                                          title: const Text("Fotoğraf", style: TextStyle(color: Colors.black87)),
+                                          title: Text(AppTranslations.t(context, 'photo'), style: const TextStyle(color: Colors.black87)),
                                           onTap: () => Navigator.pop(context, "image"),
                                         ),
                                         ListTile(
                                           leading: const Icon(Icons.videocam, color: Appstyles.primaryBlue),
-                                          title: const Text("Video", style: TextStyle(color: Colors.black87)),
+                                          title: Text(AppTranslations.t(context, 'video'), style: const TextStyle(color: Colors.black87)),
                                           onTap: () => Navigator.pop(context, "video"),
                                         ),
                                       ],
@@ -319,12 +342,12 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                       children: [
                                         ListTile(
                                           leading: const Icon(Icons.photo, color: Appstyles.primaryBlue),
-                                          title: const Text("Fotoğraf", style: TextStyle(color: Colors.black87)),
+                                          title: Text(AppTranslations.t(context, 'photo'), style: const TextStyle(color: Colors.black87)),
                                           onTap: () => Navigator.pop(context, "image"),
                                         ),
                                         ListTile(
                                           leading: const Icon(Icons.videocam, color: Appstyles.primaryBlue),
-                                          title: const Text("Video", style: TextStyle(color: Colors.black87)),
+                                          title: Text(AppTranslations.t(context, 'video'), style: const TextStyle(color: Colors.black87)),
                                           onTap: () => Navigator.pop(context, "video"),
                                         ),
                                       ],
@@ -364,9 +387,9 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       // Mevcut resimler (URL) - kaldırma seçeneği
                       if (existingImageUrls.isNotEmpty) ...[
                         const SizedBox(height: 12),
-                        const Text(
-                          'Mevcut Fotoğraflar',
-                          style: TextStyle(
+                        Text(
+                          AppTranslations.t(context, 'currentPhotos'),
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.black87,
@@ -409,19 +432,19 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                         final confirm = await showDialog<bool>(
                                           context: context,
                                           builder: (ctx) => AlertDialog(
-                                            title: const Text('Fotoğrafı kaldır?'),
-                                            content: const Text(
-                                              'Bu fotoğraf görevden kaldırılacak ve güncelle dediğinizde depolamadan (Storage) da silinecek.',
+                                            title: Text(AppTranslations.t(ctx, 'removePhoto')),
+                                            content: Text(
+                                              AppTranslations.t(ctx, 'removePhotoDesc'),
                                             ),
                                             actions: [
                                               TextButton(
                                                 onPressed: () => Navigator.of(ctx).pop(false),
-                                                child: const Text('İptal'),
+                                                child: Text(AppTranslations.t(ctx, 'cancel')),
                                               ),
                                               ElevatedButton(
                                                 onPressed: () => Navigator.of(ctx).pop(true),
                                                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                                                child: const Text('Sil', style: TextStyle(color: Colors.white)),
+                                                child: Text(AppTranslations.t(ctx, 'delete'), style: const TextStyle(color: Colors.white)),
                                               ),
                                             ],
                                           ),
@@ -455,10 +478,10 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: Text(
-                                'Mevcut Video',
-                                style: TextStyle(
+                                AppTranslations.t(context, 'currentVideo'),
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black87,
@@ -506,19 +529,19 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                         final confirm = await showDialog<bool>(
                                           context: context,
                                           builder: (ctx) => AlertDialog(
-                                            title: const Text('Fotoğrafı kaldır?'),
-                                            content: const Text(
-                                              'Bu fotoğraf görevden kaldırılacak.',
+                                            title: Text(AppTranslations.t(ctx, 'removePhoto')),
+                                            content: Text(
+                                              AppTranslations.t(ctx, 'removePhotoDesc'),
                                             ),
                                             actions: [
                                               TextButton(
                                                 onPressed: () => Navigator.of(ctx).pop(false),
-                                                child: const Text('İptal'),
+                                                child: Text(AppTranslations.t(ctx, 'cancel')),
                                               ),
                                               ElevatedButton(
                                                 onPressed: () => Navigator.of(ctx).pop(true),
                                                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                                                child: const Text('Sil', style: TextStyle(color: Colors.white)),
+                                                child: Text(AppTranslations.t(ctx, 'delete'), style: const TextStyle(color: Colors.white)),
                                               ),
                                             ],
                                           ),
@@ -550,9 +573,12 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       if (newVideoController != null)
                         Column(
                           children: [
-                            AspectRatio(
-                              aspectRatio: newVideoController!.value.aspectRatio,
-                              child: VideoPlayer(newVideoController!),
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(maxHeight: 180),
+                              child: AspectRatio(
+                                aspectRatio: newVideoController!.value.aspectRatio,
+                                child: VideoPlayer(newVideoController!),
+                              ),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
@@ -575,11 +601,11 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                   builder: (context, ref, _) {
                     final canEdit = ref.watch(canEditTaskProvider);
                     final canDelete = ref.watch(canDeleteTaskProvider);
-                    
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    return OverflowBar(
+                      spacing: 8,
+                      overflowAlignment: OverflowBarAlignment.end,
                       children: [
-                        // Sil Butonu - sadece canDelete varsa göster
                         if (canDelete)
                           TextButton.icon(
                             onPressed: () {
@@ -591,28 +617,21 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                               AppTranslations.t(context, 'delete'),
                               style: const TextStyle(color: Colors.red),
                             ),
-                          )
-                        else
-                          const SizedBox.shrink(),
-                        // İptal ve Güncelle Butonları
-                        Row(
-                          children: [
-                            OutlinedButton(
-                              onPressed: () => context.pop(),
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              child: Text(
-                                AppTranslations.t(context, 'cancel'),
-                                style: const TextStyle(color: Colors.black87),
-                              ),
+                          ),
+                        OutlinedButton(
+                          onPressed: () => context.pop(),
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            const SizedBox(width: 10),
-                            // Güncelle Butonu - sadece canEdit varsa göster
-                            if (canEdit)
-                              ElevatedButton(
+                          ),
+                          child: Text(
+                            AppTranslations.t(context, 'cancel'),
+                            style: const TextStyle(color: Colors.black87),
+                          ),
+                        ),
+                        if (canEdit)
+                          ElevatedButton(
                           onPressed: () async {
                             final descriptionText = descriptionController.text.trim();
                             if (descriptionText.isEmpty) {
@@ -776,17 +795,14 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                   AppTranslations.t(context, 'update'),
                                   style: const TextStyle(color: Colors.white),
                                 ),
-                              )
-                            else
-                              const SizedBox.shrink(),
-                          ],
-                        ),
+                              ),
                       ],
                     );
                   },
                 ),
               ],
-            ),
+            );
+            },
           );
             },
           ),

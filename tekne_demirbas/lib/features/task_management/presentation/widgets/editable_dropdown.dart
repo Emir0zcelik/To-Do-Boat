@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:ancyra_sailing/l10n/app_translations.dart';
 import 'package:ancyra_sailing/utils/appstyles.dart';
 
 class EditableDropdown extends StatelessWidget {
@@ -14,6 +15,7 @@ class EditableDropdown extends StatelessWidget {
     required this.onDelete,
     this.allowAdd = true,
     this.allowDelete = true,
+    this.icon,
   });
 
   final String label;
@@ -26,6 +28,7 @@ class EditableDropdown extends StatelessWidget {
   final void Function(int index) onDelete;
   final bool allowAdd;
   final bool allowDelete;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class EditableDropdown extends StatelessWidget {
                   borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
                 ),
                 child: Icon(
-                  label.contains('İş') ? Icons.work : Icons.directions_boat,
+                  icon ?? Icons.directions_boat,
                   color: Appstyles.white,
                   size: 20,
                 ),
@@ -76,7 +79,21 @@ class EditableDropdown extends StatelessWidget {
           child: DropdownButtonHideUnderline(
             child: DropdownButton2<int>(
               isExpanded: true,
-              value: selectedIndex,
+              value: (items.isNotEmpty &&
+                      selectedIndex >= 0 &&
+                      selectedIndex < items.length)
+                  ? selectedIndex
+                  : null,
+              hint: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Text(
+                  items.isEmpty
+                      ? AppTranslations.t(context, 'noItemsYet')
+                      : AppTranslations.t(context, 'selectOption'),
+                  style: Appstyles.normalTextStyle
+                      .copyWith(color: Appstyles.textLight),
+                ),
+              ),
               dropdownStyleData: DropdownStyleData(
                 maxHeight: 300,
                 decoration: BoxDecoration(
@@ -114,20 +131,28 @@ class EditableDropdown extends StatelessWidget {
                         ),
                         borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.add, color: Appstyles.white),
-                          SizedBox(width: 8),
-                          Text(
-                            "Yeni ekle",
-                            style: TextStyle(color: Appstyles.white, fontWeight: FontWeight.w600),
+                          const Icon(Icons.add, color: Appstyles.white),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              AppTranslations.t(context, 'addNewItem'),
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  color: Appstyles.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
 
-                if (allowDelete && selectedIndex >= lockedCount)
+                if (allowDelete &&
+                    items.isNotEmpty &&
+                    selectedIndex >= lockedCount &&
+                    selectedIndex < items.length)
                   DropdownMenuItem(
                     value: -2,
                     child: Container(
@@ -138,13 +163,18 @@ class EditableDropdown extends StatelessWidget {
                         borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
                         border: Border.all(color: Colors.red.shade300, width: 1.5),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.delete, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text(
-                            "Seçili olanı sil",
-                            style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                          const Icon(Icons.delete, color: Colors.red),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              AppTranslations.t(context, 'deleteSelected'),
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600),
+                            ),
                           ),
                         ],
                       ),

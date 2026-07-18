@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -154,6 +155,138 @@ class AccountScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+            ),
+            SizedBox(height: SizeConfig.getProportionateHeight(16)),
+            InkWell(
+              onTap: () => _showDeleteAccountDialog(context, ref),
+              child: Container(
+                alignment: Alignment.center,
+                height: SizeConfig.getProportionateHeight(50),
+                width: SizeConfig.screenWidth * 0.80,
+                decoration: BoxDecoration(
+                  color: Colors.red.shade600,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  AppTranslations.t(context, 'deleteAccount'),
+                  style: Appstyles.normalTextStyle.copyWith(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: SizeConfig.getProportionateHeight(24)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteAccountDialog(BuildContext context, WidgetRef ref) {
+    final passwordController = TextEditingController();
+    bool isDeleting = false;
+    String? errorText;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
+          icon: const Icon(Icons.warning_amber_rounded,
+              color: Colors.red, size: 48),
+          title: Text(
+            AppTranslations.t(context, 'deleteAccount'),
+            style: Appstyles.titleTextStyle,
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '${AppTranslations.t(context, 'deleteAccountConfirm')}\n\n'
+                '${AppTranslations.t(context, 'deleteAccountWarning')}',
+                style: Appstyles.normalTextStyle,
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText:
+                      AppTranslations.t(context, 'enterPasswordToDelete'),
+                  border: const OutlineInputBorder(),
+                  errorText: errorText,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed:
+                  isDeleting ? null : () => Navigator.of(dialogContext).pop(),
+              child: Text(AppTranslations.t(context, 'cancel'),
+                  style: Appstyles.normalTextStyle),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red.shade600,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: isDeleting
+                  ? null
+                  : () async {
+                      final password = passwordController.text;
+                      if (password.isEmpty) return;
+
+                      setDialogState(() {
+                        isDeleting = true;
+                        errorText = null;
+                      });
+
+                      try {
+                        ref.read(selectedRoomProvider.notifier).clear();
+                        await ref
+                            .read(authRepositoryProvider)
+                            .deleteAccount(password: password);
+
+                        if (dialogContext.mounted) {
+                          Navigator.of(dialogContext).pop();
+                        }
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(AppTranslations.t(
+                                  context, 'accountDeleted')),
+                              backgroundColor: Colors.green.shade400,
+                            ),
+                          );
+                          context.go('/signIn');
+                        }
+                      } on FirebaseAuthException catch (e) {
+                        setDialogState(() {
+                          isDeleting = false;
+                          errorText = (e.code == 'wrong-password' ||
+                                  e.code == 'invalid-credential')
+                              ? AppTranslations.t(context, 'wrongPassword')
+                              : AppTranslations.t(
+                                  context, 'deleteAccountError');
+                        });
+                      } catch (_) {
+                        setDialogState(() {
+                          isDeleting = false;
+                          errorText =
+                              AppTranslations.t(context, 'deleteAccountError');
+                        });
+                      }
+                    },
+              child: isDeleting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: Colors.white),
+                    )
+                  : Text(AppTranslations.t(context, 'yesDelete')),
             ),
           ],
         ),

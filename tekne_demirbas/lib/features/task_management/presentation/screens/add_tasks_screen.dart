@@ -182,7 +182,7 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
     if (user == null) {
       return Center(
         child: Text(
-          'Kullanıcı bulunamadı',
+          AppTranslations.t(context, 'userNotFound'),
           style: Appstyles.normalTextStyle.copyWith(color: Appstyles.textDark),
         ),
       );
@@ -267,11 +267,15 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
             boatTypeAsync.when(
               data: (boats) {
                 final names = boats.map((b) => b.name).toList();
+                final safeIndex = names.isEmpty
+                    ? 0
+                    : _selectedBoatTypeIndex.clamp(0, names.length - 1);
 
                 return EditableDropdown(
                   label: AppTranslations.t(context, 'boatType'),
+                  icon: Icons.directions_boat,
                   items: names,
-                  selectedIndex: _selectedBoatTypeIndex,
+                  selectedIndex: safeIndex,
                   lockedCount: 0,
                   allowAdd: isRoomOwner,
                   allowDelete: isRoomOwner,
@@ -314,9 +318,9 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
                   },
                 );
               },
-              loading: () => const CircularProgressIndicator(),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Text(
-                "Hata: $e",
+                AppTranslations.t(context, 'boatTypesLoadError'),
                 style: Appstyles.normalTextStyle.copyWith(color: Colors.red),
               ),
             ),
@@ -332,6 +336,7 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
 
                 return EditableDropdown(
                   label: AppTranslations.t(context, 'taskType'),
+                  icon: Icons.work,
                   items: items,
                   selectedIndex: selectedIndex,
                   lockedCount: 1,
@@ -372,9 +377,9 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
                   },
                 );
               },
-              loading: () => const CircularProgressIndicator(),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, stackTrace) => Text(
-                "Hata: $e\n\nStack: $stackTrace",
+                AppTranslations.t(context, 'taskTypesLoadError'),
                 style: Appstyles.normalTextStyle.copyWith(color: Colors.red),
               ),
             ),
@@ -617,11 +622,44 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
 
                 try {
                 final description = _descriptionController.text.trim();
+
+                if (description.isEmpty) {
+                  setState(() => _isLoading = false);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        AppTranslations.t(context, 'taskDescEmpty'),
+                        style: Appstyles.normalTextStyle.copyWith(color: Appstyles.white),
+                      ),
+                      backgroundColor: Colors.red.shade400,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
+                      ),
+                    ),
+                  );
+                  return;
+                }
+
                 final taskTypes = ref.read(task_provider.taskTypesProvider).value ?? [];
                 final boatTypes = ref.read(boat_provider.boatTypesProvider).value;
 
                 if (boatTypes == null || boatTypes.isEmpty) {
-                  throw StateError('Tekne listesi yüklenemedi veya boş.');
+                  setState(() => _isLoading = false);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        AppTranslations.t(context, 'addBoatFirst'),
+                        style: Appstyles.normalTextStyle.copyWith(color: Appstyles.white),
+                      ),
+                      backgroundColor: Colors.orange.shade700,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
+                      ),
+                    ),
+                  );
+                  return;
                 }
 
                 final safeBoatTypeIndex =
@@ -665,7 +703,7 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Resimler yüklenirken hata: $e',
+                            '${AppTranslations.t(context, 'imagesUploadError')}: $e',
                             style: Appstyles.normalTextStyle.copyWith(color: Appstyles.white),
                           ),
                           backgroundColor: Colors.red.shade400,
@@ -686,7 +724,7 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Video yüklenirken hata: $e',
+                            '${AppTranslations.t(context, 'videoUploadError')}: $e',
                             style: Appstyles.normalTextStyle.copyWith(color: Appstyles.white),
                           ),
                           backgroundColor: Colors.red.shade400,

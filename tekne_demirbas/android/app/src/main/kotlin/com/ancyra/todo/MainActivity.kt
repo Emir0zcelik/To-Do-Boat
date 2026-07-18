@@ -1,4 +1,4 @@
-package com.example.ancyra_sailing
+package com.ancyra.todo
 
 import io.flutter.embedding.android.FlutterActivity
 

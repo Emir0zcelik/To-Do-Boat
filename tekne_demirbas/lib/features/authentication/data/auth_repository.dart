@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -61,6 +62,42 @@ class AuthRepository {
 
   Stream<User?> authStateChanges() {
     return _auth.authStateChanges();
+  }
+
+  /// Hesabı kalıcı olarak siler (App Store 5.1.1(v) gereksinimi).
+  /// Önce şifre ile yeniden kimlik doğrulaması yapılır, ardından
+  /// kullanıcının kişisel verileri ve Auth hesabı silinir.
+  Future<void> deleteAccount({required String password}) async {
+    final user = _auth.currentUser;
+    if (user == null || user.email == null) {
+      throw FirebaseAuthException(code: 'no-current-user');
+    }
+
+    final credential = EmailAuthProvider.credential(
+      email: user.email!,
+      password: password,
+    );
+    await user.reauthenticateWithCredential(credential);
+
+    final firestore = FirebaseFirestore.instance;
+    final uid = user.uid;
+
+    // Üye olduğu odalardan çıkar
+    final rooms = await firestore
+        .collection('rooms')
+        .where('memberIds', arrayContains: uid)
+        .get();
+    for (final doc in rooms.docs) {
+      await doc.reference.update({
+        'memberIds': FieldValue.arrayRemove([uid]),
+      });
+    }
+
+    // Kullanıcı dokümanını sil (kişisel veriler + FCM tokenları)
+    await firestore.collection('users').doc(uid).delete();
+
+    // Auth hesabını sil
+    await user.delete();
   }
 
   Future<void> signOut() async {

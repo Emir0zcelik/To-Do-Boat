@@ -53,10 +53,10 @@ class RoomManagementDialog extends ConsumerWidget {
               child: permissionsAsync.when(
                 data: (permissions) {
                   if (permissions.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text('Henüz kullanıcı yok'),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(AppTranslations.t(context, 'noUsersYet')),
                       ),
                     );
                   }
@@ -72,7 +72,7 @@ class RoomManagementDialog extends ConsumerWidget {
                       return ListTile(
                         title: Text(
                           permission.userId == room.ownerId
-                              ? '${permission.userEmail.isNotEmpty ? permission.userEmail : permission.userId} (Oda Sahibi)'
+                              ? '${permission.userEmail.isNotEmpty ? permission.userEmail : permission.userId} (${AppTranslations.t(context, 'roomOwnerTag')})'
                               : (permission.userEmail.isNotEmpty ? permission.userEmail : permission.userId),
                           style: TextStyle(
                             fontWeight: isRoomOwner ? FontWeight.bold : FontWeight.normal,
@@ -80,7 +80,7 @@ class RoomManagementDialog extends ConsumerWidget {
                         ),
                         subtitle: Text(
                           isRoomOwner
-                              ? 'Tüm yetkilere sahip'
+                              ? AppTranslations.t(context, 'allPermissions')
                               : '${AppTranslations.t(context, 'taskAddPermission')}: ${permission.canAddTask ? AppTranslations.t(context, 'taskAddPermissionYes') : AppTranslations.t(context, 'taskAddPermissionNo')}',
                         ),
                         trailing: isOwner && !isRoomOwner && !isCurrentUser
@@ -131,7 +131,8 @@ class RoomManagementDialog extends ConsumerWidget {
                 error: (error, stack) => Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text('Hata: $error'),
+                    child: Text(
+                        '${AppTranslations.t(context, 'errorPrefix')}: $error'),
                   ),
                 ),
               ),
@@ -160,9 +161,9 @@ class RoomManagementDialog extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Kullanıcıyı Odadan Çıkar'),
+        title: Text(AppTranslations.t(context, 'removeMemberTitle')),
         content: Text(
-          '$userEmail kullanıcısını odadan çıkarmak istediğinize emin misiniz?',
+          '$userEmail\n\n${AppTranslations.t(context, 'removeMemberConfirm')}',
         ),
         actions: [
           TextButton(
@@ -180,7 +181,8 @@ class RoomManagementDialog extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('$userEmail odadan çıkarıldı'),
+                      content: Text(
+                          '$userEmail — ${AppTranslations.t(context, 'memberRemoved')}'),
                       backgroundColor: Colors.green,
                     ),
                   );
@@ -189,7 +191,8 @@ class RoomManagementDialog extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Hata: $e'),
+                      content: Text(
+                          '${AppTranslations.t(context, 'errorPrefix')}: $e'),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -200,7 +203,7 @@ class RoomManagementDialog extends ConsumerWidget {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Çıkar'),
+            child: Text(AppTranslations.t(context, 'remove')),
           ),
         ],
       ),

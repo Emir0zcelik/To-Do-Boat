@@ -170,12 +170,12 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
             taskTypeAsync.when(
               data: (tasks) {
                 if (tasks.isEmpty) {
-                  return const Text("Henüz iş türü yok");
+                  return Text(AppTranslations.t(context, 'noTaskTypesYet'));
                 }
                 return DropdownButtonFormField<String>(
                   value: _selectedTaskType,
                     hint: Text(
-                      "Tüm işler",
+                      AppTranslations.t(context, 'allTaskTypes'),
                       style: Appstyles.subtitleTextStyle,
                     ),
                     isExpanded: true,
@@ -353,7 +353,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.clear, size: 18),
-                      label: const Text("Temizle"),
+                      label: Text(AppTranslations.t(context, 'clear')),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Appstyles.textLight,
                         side: BorderSide(color: Appstyles.lightBlue),
@@ -372,7 +372,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                 Expanded(
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.calendar_month, size: 18),
-                    label: const Text("Tarih Seç"),
+                    label: Text(AppTranslations.t(context, 'selectDate')),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Appstyles.primaryBlue,
                       foregroundColor: Appstyles.white,
@@ -415,7 +415,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                         borderRadius: BorderRadius.circular(Appstyles.borderRadiusMedium),
                       ),
                     ),
-                    child: const Text("Temizle", style: TextStyle(fontWeight: FontWeight.w600)),
+                    child: Text(AppTranslations.t(context, 'clear'),
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
                     onPressed: () {
                       // Provider'dan notifier'ı al - tüm filter controller'lar aynı metodları kullanır
                       final provider = widget.filterControllerProvider;
