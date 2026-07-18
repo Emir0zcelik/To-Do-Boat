@@ -350,11 +350,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                   children: [
                     const Icon(Icons.edit, color: Appstyles.white, size: 24),
                     const SizedBox(width: 12),
-                    Text(
-                      AppTranslations.t(context, 'changeRoomName'),
-                      style: Appstyles.headingTextStyle.copyWith(
-                        color: Appstyles.white,
-                        fontSize: 20,
+                    Expanded(
+                      child: Text(
+                        AppTranslations.t(context, 'changeRoomName'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Appstyles.headingTextStyle.copyWith(
+                          color: Appstyles.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -519,11 +523,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                       children: [
                         const Icon(Icons.person, color: Appstyles.white, size: 24),
                         const SizedBox(width: 12),
-                        Text(
-                          AppTranslations.t(context, 'accountInfo'),
-                          style: Appstyles.headingTextStyle.copyWith(
-                            color: Appstyles.white,
-                            fontSize: 20,
+                        Expanded(
+                          child: Text(
+                            AppTranslations.t(context, 'accountInfo'),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Appstyles.headingTextStyle.copyWith(
+                              color: Appstyles.white,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ],
@@ -717,11 +725,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                   children: [
                     const Icon(Icons.edit, color: Appstyles.white, size: 24),
                     const SizedBox(width: 12),
-                    Text(
-                      AppTranslations.t(context, 'editName'),
-                      style: Appstyles.headingTextStyle.copyWith(
-                        color: Appstyles.white,
-                        fontSize: 20,
+                    Expanded(
+                      child: Text(
+                        AppTranslations.t(context, 'editName'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Appstyles.headingTextStyle.copyWith(
+                          color: Appstyles.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -915,11 +927,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                   children: [
                     const Icon(Icons.exit_to_app, color: Appstyles.white, size: 24),
                     const SizedBox(width: 12),
-                    Text(
-                      AppTranslations.t(context, 'leaveRoom'),
-                      style: Appstyles.headingTextStyle.copyWith(
-                        color: Appstyles.white,
-                        fontSize: 20,
+                    Expanded(
+                      child: Text(
+                        AppTranslations.t(context, 'leaveRoom'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Appstyles.headingTextStyle.copyWith(
+                          color: Appstyles.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -1031,11 +1047,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                   children: [
                     const Icon(Icons.warning, color: Appstyles.white, size: 24),
                     const SizedBox(width: 12),
-                    Text(
-                      AppTranslations.t(context, 'deleteRoom'),
-                      style: Appstyles.headingTextStyle.copyWith(
-                        color: Appstyles.white,
-                        fontSize: 20,
+                    Expanded(
+                      child: Text(
+                        AppTranslations.t(context, 'deleteRoom'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Appstyles.headingTextStyle.copyWith(
+                          color: Appstyles.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -1244,7 +1264,8 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
           ),
           child: IconButton(
             icon: const Icon(Icons.person, color: Appstyles.primaryBlue),
-            onPressed: () => _showProfilePopup(context, user),
+            onPressed: () => context.push('/account'),
+            tooltip: AppTranslations.t(context, 'myAccount'),
           ),
         ),
         actions: [
@@ -1408,11 +1429,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                     child: const Icon(Icons.meeting_room, color: Appstyles.white, size: 20),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    AppTranslations.t(context, 'myRooms'),
-                    style: Appstyles.headingTextStyle.copyWith(
-                      color: Appstyles.primaryBlue,
-                      fontSize: 20,
+                  Expanded(
+                    child: Text(
+                      AppTranslations.t(context, 'myRooms'),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Appstyles.headingTextStyle.copyWith(
+                        color: Appstyles.primaryBlue,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                 ],
@@ -1612,11 +1637,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                             child: const Icon(Icons.pending, color: Colors.orange, size: 20),
                           ),
                           const SizedBox(width: 12),
-                          Text(
-                            'Bekleyen İsteklerim',
-                            style: Appstyles.headingTextStyle.copyWith(
-                              color: Appstyles.primaryBlue,
-                              fontSize: 20,
+                          Expanded(
+                            child: Text(
+                              AppTranslations.t(context, 'myPendingRequests'),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Appstyles.headingTextStyle.copyWith(
+                                color: Appstyles.primaryBlue,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ],
@@ -1690,11 +1719,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                   children: [
                     const Icon(Icons.add_business, color: Appstyles.white, size: 24),
                     const SizedBox(width: 12),
-                    Text(
-                      AppTranslations.t(context, 'createRoomDialogTitle'),
-                      style: Appstyles.headingTextStyle.copyWith(
-                        color: Appstyles.white,
-                        fontSize: 20,
+                    Expanded(
+                      child: Text(
+                        AppTranslations.t(context, 'createRoomDialogTitle'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Appstyles.headingTextStyle.copyWith(
+                          color: Appstyles.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -1875,11 +1908,15 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                   children: [
                     const Icon(Icons.login, color: Appstyles.white, size: 24),
                     const SizedBox(width: 12),
-                    Text(
-                      AppTranslations.t(context, 'joinRoom'),
-                      style: Appstyles.headingTextStyle.copyWith(
-                        color: Appstyles.white,
-                        fontSize: 20,
+                    Expanded(
+                      child: Text(
+                        AppTranslations.t(context, 'joinRoom'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Appstyles.headingTextStyle.copyWith(
+                          color: Appstyles.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],

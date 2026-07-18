@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ancyra_sailing/core/permissions/media_permission_service.dart';
 import 'package:ancyra_sailing/common_widgets/async_value_ui.dart';
 import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
 import 'package:ancyra_sailing/features/room_management/presentation/providers/permission_provider.dart';
@@ -56,6 +57,13 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
+    final granted = source == ImageSource.camera
+        ? await MediaPermissionService.instance
+            .ensureCameraAccess(context)
+        : await MediaPermissionService.instance
+            .ensureGalleryAccess(context);
+    if (!granted || !mounted) return;
+
     final XFile? picked = await _picker.pickImage(
       source: source,
       imageQuality: 70,
@@ -68,6 +76,13 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
   }
 
   Future<void> _pickVideo(ImageSource source) async {
+    final granted = source == ImageSource.camera
+        ? await MediaPermissionService.instance
+            .ensureCameraAccess(context, forVideo: true)
+        : await MediaPermissionService.instance
+            .ensureGalleryAccess(context, forVideo: true);
+    if (!granted || !mounted) return;
+
     final XFile? picked = await _picker.pickVideo(source: source);
     if (picked != null) {
       _videoController?.dispose();

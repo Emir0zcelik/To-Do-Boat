@@ -108,7 +108,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
           child: IconButton(
             icon: const Icon(Icons.person),
             color: Appstyles.primaryBlue,
-            onPressed: () => _showAccountDialog(context, ref),
+            onPressed: () => context.push('/account'),
             tooltip: AppTranslations.t(context, 'myAccount'),
           ),
         ),
@@ -411,7 +411,13 @@ class _MainScreenState extends ConsumerState<MainScreen>
           children: [
             const Icon(Icons.meeting_room, color: Colors.blue),
             const SizedBox(width: 8),
-            Text(AppTranslations.t(context, 'roomInfo')),
+            Expanded(
+              child: Text(
+                AppTranslations.t(context, 'roomInfo'),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         content: Column(
@@ -497,7 +503,13 @@ class _MainScreenState extends ConsumerState<MainScreen>
                   children: [
                     const Icon(Icons.person, color: Colors.blue),
                     const SizedBox(width: 8),
-                    Text(AppTranslations.t(context, 'accountInfo')),
+                    Expanded(
+                      child: Text(
+                        AppTranslations.t(context, 'accountInfo'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
                 content: displayNameAsync.when(

@@ -205,7 +205,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                     DropdownMenuItem<String>(
                       value: null,
                       child: Text(
-                        "Tüm işler",
+                        AppTranslations.t(context, 'allTaskTypes'),
                         style: Appstyles.normalTextStyle,
                       ),
                     ),
@@ -229,7 +229,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Text("İş türleri yüklenemedi: $error"),
+              error: (error, stack) => Text(
+                AppTranslations.t(context, 'taskTypesLoadErrorFilter'),
+              ),
             ),
 
             const SizedBox(height: 10),
@@ -248,7 +250,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                   return DropdownButtonFormField<String>(
                     value: _selectedCreatedBy,
                     hint: Text(
-                      "Tüm kullanıcılar",
+                      AppTranslations.t(context, 'allUsers'),
                       style: Appstyles.subtitleTextStyle,
                     ),
                     isExpanded: true,
@@ -278,7 +280,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                       DropdownMenuItem<String>(
                         value: null,
                         child: Text(
-                          "Tüm kullanıcılar",
+                          AppTranslations.t(context, 'allUsers'),
                           style: Appstyles.normalTextStyle,
                         ),
                       ),
@@ -337,7 +339,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                   Expanded(
                     child: Text(
                       _selectedDateRange == null
-                          ? "Tüm tarihler"
+                          ? AppTranslations.t(context, 'allDates')
                           : "${_fmt(_selectedDateRange!.start)} - "
                                 "${_fmt(_selectedDateRange!.end)}",
                       style: Appstyles.normalTextStyle.copyWith(color: Appstyles.textDark),
@@ -453,9 +455,12 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        "Uygula",
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      child: Text(
+                        AppTranslations.t(context, 'apply'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
                       ),
                       onPressed: () {
                         // Provider'dan notifier'ı al - tüm filter controller'lar aynı metodları kullanır

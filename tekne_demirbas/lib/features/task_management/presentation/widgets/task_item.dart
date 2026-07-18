@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ancyra_sailing/core/permissions/media_permission_service.dart';
 import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
 import 'package:ancyra_sailing/features/room_management/data/room_repository.dart';
 import 'package:ancyra_sailing/features/room_management/presentation/providers/permission_provider.dart';
@@ -28,6 +29,30 @@ class TaskItem extends ConsumerStatefulWidget {
 
 class _TaskItemState extends ConsumerState<TaskItem> {
   final ImagePicker _picker = ImagePicker();
+
+  Future<XFile?> _pickImageWithPermission(ImageSource source) async {
+    final granted = source == ImageSource.camera
+        ? await MediaPermissionService.instance.ensureCameraAccess(context)
+        : await MediaPermissionService.instance.ensureGalleryAccess(context);
+    if (!granted || !mounted) return null;
+
+    return _picker.pickImage(source: source, imageQuality: 70);
+  }
+
+  Future<XFile?> _pickVideoWithPermission(ImageSource source) async {
+    final granted = source == ImageSource.camera
+        ? await MediaPermissionService.instance.ensureCameraAccess(
+            context,
+            forVideo: true,
+          )
+        : await MediaPermissionService.instance.ensureGalleryAccess(
+            context,
+            forVideo: true,
+          );
+    if (!granted || !mounted) return null;
+
+    return _picker.pickVideo(source: source);
+  }
   
   void _editTask() {
     final titleController = TextEditingController(text: widget.task.title);
@@ -305,9 +330,9 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                               );
                               
                               if (type == "image") {
-                                final XFile? picked = await _picker.pickImage(
-                                  source: ImageSource.camera,
-                                  imageQuality: 70,
+                                final XFile? picked =
+                                    await _pickImageWithPermission(
+                                  ImageSource.camera,
                                 );
                                 if (picked != null) {
                                   setDialogState(() {
@@ -315,7 +340,10 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                   });
                                 }
                               } else if (type == "video") {
-                                final XFile? picked = await _picker.pickVideo(source: ImageSource.camera);
+                                final XFile? picked =
+                                    await _pickVideoWithPermission(
+                                  ImageSource.camera,
+                                );
                                 if (picked != null) {
                                   newVideoController?.dispose();
                                   final file = File(picked.path);
@@ -357,9 +385,9 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                               );
                               
                               if (type == "image") {
-                                final XFile? picked = await _picker.pickImage(
-                                  source: ImageSource.gallery,
-                                  imageQuality: 70,
+                                final XFile? picked =
+                                    await _pickImageWithPermission(
+                                  ImageSource.gallery,
                                 );
                                 if (picked != null) {
                                   setDialogState(() {
@@ -367,7 +395,10 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                   });
                                 }
                               } else if (type == "video") {
-                                final XFile? picked = await _picker.pickVideo(source: ImageSource.gallery);
+                                final XFile? picked =
+                                    await _pickVideoWithPermission(
+                                  ImageSource.gallery,
+                                );
                                 if (picked != null) {
                                   newVideoController?.dispose();
                                   final file = File(picked.path);

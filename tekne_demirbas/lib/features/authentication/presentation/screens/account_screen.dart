@@ -16,20 +16,28 @@ class AccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    SizeConfig.init(context);
     final currentUserAsync = ref.watch(currentUserProvider);
 
-    return currentUserAsync.when(
-      data: (currentUser) {
-        if (currentUser == null) {
-          return Center(
-              child: Text(AppTranslations.t(context, 'userNotFound')));
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppTranslations.t(context, 'myAccount')),
+      ),
+      body: SafeArea(
+        child: currentUserAsync.when(
+          data: (currentUser) {
+            if (currentUser == null) {
+              return Center(
+                  child: Text(AppTranslations.t(context, 'userNotFound')));
+            }
 
-        return _buildAccountContent(context, ref, currentUser);
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) =>
-          Center(child: Text(AppTranslations.t(context, 'errorOccurred'))),
+            return _buildAccountContent(context, ref, currentUser);
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (_, __) =>
+              Center(child: Text(AppTranslations.t(context, 'errorOccurred'))),
+        ),
+      ),
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:ancyra_sailing/features/authentication/presentation/screens/account_screen.dart';
 import 'package:ancyra_sailing/features/authentication/presentation/screens/register_screen.dart';
 import 'package:ancyra_sailing/features/authentication/presentation/screens/sign_in_screen.dart';
 import 'package:ancyra_sailing/features/authentication/presentation/screens/splash_screen.dart';
@@ -12,7 +13,7 @@ import 'package:ancyra_sailing/routes/go_router_refresh_stream.dart';
 
 part 'routes.g.dart';
 
-enum AppRoutes { splash, roomSelection, main, signIn, register }
+enum AppRoutes { splash, roomSelection, main, account, signIn, register }
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
   return FirebaseAuth.instance;
@@ -36,16 +37,20 @@ GoRouter goRouter(Ref ref) {
       final isEmailVerified = firebaseAuth.currentUser?.emailVerified ?? false;
 
       // Email doğrulanmamış kullanıcı giriş yapamaz
-      if (isLoggedIn && !isEmailVerified && 
-          (currentPath == '/main' || currentPath == '/roomSelection')) {
+      if (isLoggedIn && !isEmailVerified &&
+          (currentPath == '/main' ||
+              currentPath == '/roomSelection' ||
+              currentPath == '/account')) {
         return '/signIn'; // Email doğrulama mesajı gösterilecek
       }
 
       if (isLoggedIn && isEmailVerified &&
           (currentPath == '/signIn' || currentPath == '/register')) {
         return '/roomSelection';
-      } else if (!isLoggedIn && 
-          (currentPath.startsWith('/main') || currentPath.startsWith('/roomSelection'))) {
+      } else if (!isLoggedIn &&
+          (currentPath.startsWith('/main') ||
+              currentPath.startsWith('/roomSelection') ||
+              currentPath.startsWith('/account'))) {
         return '/signIn';
       } else {
         return null;
@@ -67,6 +72,11 @@ GoRouter goRouter(Ref ref) {
         path: '/main',
         name: AppRoutes.main.name,
         builder: (cxt, state) => const MainScreen(),
+      ),
+      GoRoute(
+        path: '/account',
+        name: AppRoutes.account.name,
+        builder: (cxt, state) => const AccountScreen(),
       ),
       GoRoute(
         path: '/signIn',
