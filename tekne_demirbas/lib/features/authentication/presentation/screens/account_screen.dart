@@ -49,6 +49,12 @@ class AccountScreen extends ConsumerWidget {
       BuildContext context, WidgetRef ref, currentUser) {
     final currentLocale = ref.watch(localeProvider);
     final currentAppLocale = AppLocale.fromLocale(currentLocale);
+    final isTablet = SizeConfig.isTablet;
+    final titleSize = isTablet ? SizeConfig.sp(26) : 20.0;
+    final avatarSize = isTablet ? SizeConfig.sp(100) : 80.0;
+    final emailSize = isTablet ? SizeConfig.sp(18) : 14.0;
+    final languageSize = isTablet ? SizeConfig.sp(18) : 16.0;
+    final dropdownSize = isTablet ? SizeConfig.sp(17) : 14.0;
 
     return Center(
       child: SingleChildScrollView(
@@ -59,25 +65,46 @@ class AccountScreen extends ConsumerWidget {
               AppTranslations.t(context, 'accountInfo'),
               style: Appstyles.titleTextStyle.copyWith(
                 color: Colors.black,
-                fontSize: 20,
+                fontSize: titleSize,
+                fontWeight: isTablet ? FontWeight.w600 : FontWeight.w500,
               ),
             ),
-            const Icon(Icons.account_circle, color: Colors.blueGrey, size: 80),
-            Text(currentUser.email!),
-            SizedBox(height: SizeConfig.getProportionateHeight(20)),
+            if (isTablet)
+              SizedBox(height: SizeConfig.getProportionateHeight(12)),
+            Icon(
+              Icons.account_circle,
+              color: Colors.blueGrey,
+              size: avatarSize,
+            ),
+            if (isTablet)
+              SizedBox(height: SizeConfig.getProportionateHeight(8)),
+            Text(
+              currentUser.email!,
+              style: Appstyles.normalTextStyle.copyWith(
+                fontSize: emailSize,
+                color: Colors.black87,
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.getProportionateHeight(isTablet ? 24 : 20),
+            ),
             // Dil seçenekleri (dropdown)
             Text(
               AppTranslations.t(context, 'language'),
               style: Appstyles.normalTextStyle.copyWith(
                 color: Colors.black87,
-                fontSize: 16,
+                fontSize: languageSize,
+                fontWeight: isTablet ? FontWeight.w500 : FontWeight.w400,
               ),
             ),
             SizedBox(height: SizeConfig.getProportionateHeight(8)),
             SizedBox(
               width: SizeConfig.screenWidth * 0.75,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? SizeConfig.sp(16) : 16,
+                  vertical: isTablet ? SizeConfig.sp(6) : 4,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
@@ -86,10 +113,20 @@ class AccountScreen extends ConsumerWidget {
                   value: currentAppLocale,
                   isExpanded: true,
                   underline: const SizedBox.shrink(),
+                  style: TextStyle(
+                    fontSize: dropdownSize,
+                    color: Colors.black87,
+                  ),
                   items: AppLocale.values
                       .map((appLocale) => DropdownMenuItem<AppLocale>(
                             value: appLocale,
-                            child: Text(appLocale.displayName),
+                            child: Text(
+                              appLocale.displayName,
+                              style: TextStyle(
+                                fontSize: dropdownSize,
+                                color: Colors.black87,
+                              ),
+                            ),
                           ))
                       .toList(),
                   onChanged: (appLocale) async {
