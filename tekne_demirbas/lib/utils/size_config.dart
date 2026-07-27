@@ -27,7 +27,7 @@ class SizeConfig {
   static double get toolbarHeight =>
       isTablet ? kToolbarHeight * 1.4 : kToolbarHeight;
 
-  static double get bottomNavHeight => isTablet ? 78.0 : 56.0;
+  static double get bottomNavHeight => isTablet ? 88.0 : 56.0;
 
   static double get iconSm => sp(20);
 

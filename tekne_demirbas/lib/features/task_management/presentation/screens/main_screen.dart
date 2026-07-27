@@ -99,18 +99,24 @@ class _MainScreenState extends ConsumerState<MainScreen>
         elevation: 0,
         backgroundColor: Appstyles.white,
         toolbarHeight: SizeConfig.toolbarHeight,
-        leading: Container(
-          margin: EdgeInsets.all(SizeConfig.sp(8)),
-          decoration: BoxDecoration(
+        leading: Padding(
+          padding: EdgeInsets.all(SizeConfig.sp(8)),
+          child: Material(
             color: Appstyles.lightBlue,
-            shape: BoxShape.circle,
-            boxShadow: Appstyles.softShadow,
-          ),
-          child: IconButton(
-            icon: Icon(Icons.person, size: SizeConfig.iconMd),
-            color: Appstyles.primaryBlue,
-            onPressed: () => context.push('/account'),
-            tooltip: AppTranslations.t(context, 'myAccount'),
+            shape: const CircleBorder(),
+            elevation: 1,
+            shadowColor: Colors.black26,
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: () => context.push('/account'),
+              child: Center(
+                child: Icon(
+                  Icons.person,
+                  color: Appstyles.primaryBlue,
+                  size: SizeConfig.iconMd,
+                ),
+              ),
+            ),
           ),
         ),
         title: Text(
@@ -138,12 +144,11 @@ class _MainScreenState extends ConsumerState<MainScreen>
                 tooltip: AppTranslations.t(context, 'roomInfo'),
                 child: Padding(
                   padding: EdgeInsets.all(SizeConfig.sp(8)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Appstyles.lightBlue,
-                      shape: BoxShape.circle,
-                      boxShadow: Appstyles.softShadow,
-                    ),
+                  child: Material(
+                    color: Appstyles.lightBlue,
+                    shape: const CircleBorder(),
+                    elevation: 1,
+                    shadowColor: Colors.black26,
                     child: Padding(
                       padding: EdgeInsets.all(SizeConfig.sp(8)),
                       child: pendingRequestsAsync?.when(
@@ -349,53 +354,66 @@ class _MainScreenState extends ConsumerState<MainScreen>
         ),
       ),
       bottomNavigationBar: Container(
-        height: SizeConfig.bottomNavHeight +
-            MediaQuery.paddingOf(context).bottom,
         decoration: BoxDecoration(
           color: Appstyles.white,
           boxShadow: Appstyles.mediumShadow,
         ),
-        child: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (value) {
-            setState(() {
-              currentIndex = value;
-            });
-            _tabController.animateTo(value);
-          },
-          iconSize: SizeConfig.sp(26),
-          elevation: 0,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Appstyles.primaryBlue,
-          unselectedItemColor: Appstyles.textLight,
-          selectedFontSize: SizeConfig.sp(13),
-          unselectedFontSize: SizeConfig.sp(12),
-          selectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: SizeConfig.sp(13),
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: SizeConfig.bottomNavHeight,
+            child: BottomNavigationBar(
+              currentIndex: currentIndex,
+              onTap: (value) {
+                setState(() {
+                  currentIndex = value;
+                });
+                _tabController.animateTo(value);
+              },
+              // Seçili/seçili değil aynı boyut: geçiş animasyonunda
+              // anlık overflow (sarı şerit) olmasın.
+              iconSize: SizeConfig.sp(26),
+              elevation: 0,
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: Appstyles.primaryBlue,
+              unselectedItemColor: Appstyles.textLight,
+              selectedFontSize: SizeConfig.sp(12),
+              unselectedFontSize: SizeConfig.sp(12),
+              selectedLabelStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: SizeConfig.sp(12),
+                height: 1.1,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: SizeConfig.sp(12),
+                height: 1.1,
+              ),
+              backgroundColor: Appstyles.white,
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.warning_amber_outlined,
+                      size: SizeConfig.sp(26)),
+                  label: AppTranslations.t(context, 'tabInProgress'),
+                  activeIcon:
+                      Icon(Icons.warning_amber, size: SizeConfig.sp(26)),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.check_circle_outline,
+                      size: SizeConfig.sp(26)),
+                  label: AppTranslations.t(context, 'tabCompleted'),
+                  activeIcon:
+                      Icon(Icons.check_circle, size: SizeConfig.sp(26)),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add_circle_outline,
+                      size: SizeConfig.sp(26)),
+                  label: AppTranslations.t(context, 'tabAdd'),
+                  activeIcon: Icon(Icons.add_circle, size: SizeConfig.sp(26)),
+                ),
+              ],
+            ),
           ),
-          unselectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: SizeConfig.sp(12),
-          ),
-          backgroundColor: Appstyles.white,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.warning_amber_outlined, size: SizeConfig.sp(26)),
-              label: AppTranslations.t(context, 'tabInProgress'),
-              activeIcon: Icon(Icons.warning_amber, size: SizeConfig.sp(28)),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.check_circle_outline, size: SizeConfig.sp(26)),
-              label: AppTranslations.t(context, 'tabCompleted'),
-              activeIcon: Icon(Icons.check_circle, size: SizeConfig.sp(28)),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_circle_outline, size: SizeConfig.sp(26)),
-              label: AppTranslations.t(context, 'tabAdd'),
-              activeIcon: Icon(Icons.add_circle, size: SizeConfig.sp(28)),
-            ),
-          ],
         ),
       ),
     );

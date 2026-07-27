@@ -9,9 +9,7 @@ import 'package:ancyra_sailing/features/room_management/domain/room.dart';
 import 'package:ancyra_sailing/features/room_management/domain/room_request.dart';
 import 'package:ancyra_sailing/features/room_management/presentation/providers/permission_provider.dart';
 import 'package:ancyra_sailing/features/room_management/presentation/providers/selected_room_provider.dart';
-import 'package:ancyra_sailing/l10n/app_locale.dart';
 import 'package:ancyra_sailing/l10n/app_translations.dart';
-import 'package:ancyra_sailing/l10n/locale_provider.dart';
 import 'package:ancyra_sailing/utils/appstyles.dart';
 import 'package:ancyra_sailing/utils/size_config.dart';
 
@@ -1239,9 +1237,6 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
       );
     }
 
-    final currentLocale = ref.watch(localeProvider);
-    final currentAppLocale = AppLocale.fromLocale(currentLocale);
-
     return Scaffold(
       backgroundColor: Appstyles.lightGray,
       appBar: AppBar(
@@ -1256,51 +1251,26 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
           ),
         ),
         automaticallyImplyLeading: false,
-        leading: Container(
-          margin: EdgeInsets.all(SizeConfig.sp(8)),
-          decoration: BoxDecoration(
+        leading: Padding(
+          padding: EdgeInsets.all(SizeConfig.sp(8)),
+          child: Material(
             color: Appstyles.lightBlue,
-            shape: BoxShape.circle,
-            boxShadow: Appstyles.softShadow,
-          ),
-          child: IconButton(
-            icon: Icon(Icons.person,
-                color: Appstyles.primaryBlue, size: SizeConfig.iconMd),
-            onPressed: () => context.push('/account'),
-            tooltip: AppTranslations.t(context, 'myAccount'),
-          ),
-        ),
-        actions: [
-          // Dil seçici
-          Padding(
-            padding: EdgeInsets.only(right: SizeConfig.sp(8)),
-            child: DropdownButton<AppLocale>(
-              value: currentAppLocale,
-              underline: const SizedBox.shrink(),
-              style: TextStyle(
-                fontSize: SizeConfig.sp(14),
-                color: Appstyles.primaryBlue,
+            shape: const CircleBorder(),
+            elevation: 1,
+            shadowColor: Colors.black26,
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: () => context.push('/account'),
+              child: Center(
+                child: Icon(
+                  Icons.person,
+                  color: Appstyles.primaryBlue,
+                  size: SizeConfig.iconMd,
+                ),
               ),
-              items: AppLocale.values
-                  .map((appLocale) => DropdownMenuItem<AppLocale>(
-                        value: appLocale,
-                        child: Text(
-                          appLocale.displayName,
-                          style: TextStyle(
-                            fontSize: SizeConfig.sp(14),
-                            color: Appstyles.primaryBlue,
-                          ),
-                        ),
-                      ))
-                  .toList(),
-              onChanged: (appLocale) async {
-                if (appLocale != null) {
-                  await ref.read(localeProvider.notifier).setLocale(appLocale);
-                }
-              },
             ),
           ),
-        ],
+        ),
         iconTheme: IconThemeData(
           color: Appstyles.primaryBlue,
           size: SizeConfig.iconMd,
