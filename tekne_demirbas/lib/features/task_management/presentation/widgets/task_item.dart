@@ -55,7 +55,6 @@ class _TaskItemState extends ConsumerState<TaskItem> {
   }
   
   void _editTask() {
-    final titleController = TextEditingController(text: widget.task.title);
     final descriptionController = TextEditingController(text: widget.task.description);
     String? selectedBoatType = widget.task.boatType;
     String? selectedTaskType = widget.task.taskType;
@@ -69,11 +68,12 @@ class _TaskItemState extends ConsumerState<TaskItem> {
 
     showDialog(
       context: context,
+      useRootNavigator: true,
       builder: (ctx) {
         // Dialog kapatıldığında video controller'ı temizle
         return PopScope(
           canPop: true,
-          onPopInvoked: (didPop) {
+          onPopInvokedWithResult: (didPop, _) {
             if (didPop) {
               newVideoController?.dispose();
             }
@@ -85,11 +85,16 @@ class _TaskItemState extends ConsumerState<TaskItem> {
 
           return StatefulBuilder(
             builder: (context, setDialogState) {
-              final dialogWidth = MediaQuery.sizeOf(context).width;
-              final dialogMaxHeight = MediaQuery.sizeOf(context).height * 0.55;
+              final screen = MediaQuery.sizeOf(context);
+              final isTablet = screen.shortestSide >= 600;
+              final dialogMaxWidth = isTablet ? 520.0 : screen.width * 0.92;
+              final dialogMaxHeight = screen.height * (isTablet ? 0.72 : 0.55);
 
               return AlertDialog(
-              insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              insetPadding: EdgeInsets.symmetric(
+                horizontal: isTablet ? 40 : 16,
+                vertical: isTablet ? 28 : 24,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -111,42 +116,18 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                   ),
                 ],
               ),
-              content: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: dialogWidth * 0.9,
-                  maxHeight: dialogMaxHeight,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Görev Adı
-                      Text(
-                        AppTranslations.t(context, 'taskName'),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: titleController,
-                        decoration: InputDecoration(
-                          hintText: AppTranslations.t(context, 'taskNameHint'),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          prefixIcon: const Icon(Icons.title),
-                        ),
-                        style: const TextStyle(color: Colors.black87),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Görev Tanımı
+              content: SizedBox(
+                width: dialogMaxWidth,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: dialogMaxHeight,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                      // Görev Tanımı (başlık kaydederken açıklamadan otomatik üretilir)
                       Text(
                         AppTranslations.t(context, 'taskDesc'),
                         style: const TextStyle(
@@ -184,20 +165,31 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       boatTypeAsync.when(
                         data: (boats) {
                           final boatNames = boats.map((b) => b.name).toList();
-                          final boatValue = selectedBoatType != null &&
-                                  boatNames.contains(selectedBoatType)
-                              ? selectedBoatType
-                              : null;
+                          // Soft-delete edilmiş mevcut tekne türünü de listeye ekle
+                          final currentBoat = selectedBoatType?.trim() ?? '';
+                          if (currentBoat.isNotEmpty &&
+                              !boatNames.contains(currentBoat)) {
+                            boatNames.insert(0, currentBoat);
+                          }
+                          final boatValue =
+                              (selectedBoatType != null &&
+                                      boatNames.contains(selectedBoatType))
+                                  ? selectedBoatType
+                                  : null;
                           return DropdownButtonFormField<String>(
+                            key: ValueKey('edit-boat-$boatValue-${boatNames.join('|')}'),
                             isExpanded: true,
-                            value: boatValue,
+                            initialValue: boatValue,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               filled: true,
                               fillColor: Colors.grey[100],
-                              prefixIcon: const Icon(Icons.directions_boat),
+                            ),
+                            hint: Text(
+                              AppTranslations.t(context, 'boatTypeLabel'),
+                              overflow: TextOverflow.ellipsis,
                             ),
                             items: boatNames.map((name) {
                               return DropdownMenuItem(
@@ -218,9 +210,9 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                           );
                         },
                         loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (_, __) => const Text(
-                          'Tekne türleri yüklenemedi',
-                          style: TextStyle(color: Colors.red),
+                        error: (_, __) => Text(
+                          AppTranslations.t(context, 'boatTypesLoadError'),
+                          style: const TextStyle(color: Colors.red),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -237,20 +229,27 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       const SizedBox(height: 8),
                       taskTypeAsync.when(
                         data: (taskTypes) {
-                          final taskTypeNames = taskTypes.map((t) => t.name).toList();
-                          final effectiveValue = selectedTaskType ?? '';
+                          final taskTypeNames =
+                              taskTypes.map((t) => t.name).toList();
+                          final currentType = selectedTaskType?.trim() ?? '';
+                          if (currentType.isNotEmpty &&
+                              !taskTypeNames.contains(currentType)) {
+                            taskTypeNames.insert(0, currentType);
+                          }
                           final validValues = ['', ...taskTypeNames];
-                          final value = validValues.contains(effectiveValue) ? effectiveValue : '';
+                          final value = validValues.contains(currentType)
+                              ? currentType
+                              : '';
                           return DropdownButtonFormField<String>(
+                            key: ValueKey('edit-task-$value-${taskTypeNames.join('|')}'),
                             isExpanded: true,
-                            value: value,
+                            initialValue: value,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               filled: true,
                               fillColor: Colors.grey[100],
-                              prefixIcon: const Icon(Icons.work),
                             ),
                             items: [
                               DropdownMenuItem(
@@ -282,9 +281,9 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                           );
                         },
                         loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (_, __) => const Text(
-                          'İş türleri yüklenemedi',
-                          style: TextStyle(color: Colors.red),
+                        error: (_, __) => Text(
+                          AppTranslations.t(context, 'taskTypesLoadError'),
+                          style: const TextStyle(color: Colors.red),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -626,6 +625,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                     ],
                   ),
                 ),
+                ),
               ),
               actions: [
                 Consumer(
@@ -761,16 +761,20 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                     ? widget.task.videoUrl
                                     : null;
 
-                            // Başlığı açıklamanın ilk 50 karakteri olarak oluştur
+                            // Başlık: görev oluşturmadaki gibi açıklamadan üretilir
                             final title = descriptionText.length > 50
                                 ? '${descriptionText.substring(0, 50).trimRight()}…'
                                 : descriptionText;
+
+                            // İş türü değişmediyse eski kalır; değiştiyse yenisi yazılır
+                            final resolvedTaskType =
+                                selectedTaskType ?? widget.task.taskType;
 
                             final newTask = Task(
                               id: widget.task.id,
                               title: title,
                               description: descriptionText,
-                              taskType: selectedTaskType ?? widget.task.taskType,
+                              taskType: resolvedTaskType,
                               boatType: selectedBoatType ?? widget.task.boatType,
                               createdBy: widget.task.createdBy,
                               roomId: widget.task.roomId,
@@ -1215,11 +1219,15 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       ),
                       icon: const Icon(Icons.more_horiz, color: Appstyles.primaryBlue, size: 22),
                       onSelected: (value) {
-                        if (value == 'edit') {
-                          _editTask();
-                        } else if (value == 'delete') {
-                          _showDeleteConfirmation();
-                        }
+                        // Popup kapanmadan dialog açmak iPad'de çökme yapabiliyor.
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (!mounted) return;
+                          if (value == 'edit') {
+                            _editTask();
+                          } else if (value == 'delete') {
+                            _showDeleteConfirmation();
+                          }
+                        });
                       },
                       itemBuilder: (context) => [
                         if (canEdit)
