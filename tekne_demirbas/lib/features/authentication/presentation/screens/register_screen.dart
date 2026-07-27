@@ -124,12 +124,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             gradient: Appstyles.lightOceanGradient,
           ),
           child: Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.getProportionateWidth(24),
-                ),
-                child: Column(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: SizeConfig.formMaxWidth),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: SizeConfig.getProportionateHeight(20)),
@@ -243,6 +243,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ],
                 ),
               ),
+            ),
             ),
           ),
         ),

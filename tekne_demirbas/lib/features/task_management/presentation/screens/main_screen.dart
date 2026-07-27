@@ -93,6 +93,29 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
     final currentUserAsync = ref.watch(currentUserProvider);
     
+    final isTablet = SizeConfig.isTabletOf(context);
+
+    final tabBody = Container(
+      decoration: const BoxDecoration(
+        gradient: Appstyles.lightOceanGradient,
+      ),
+      child: TabBarView(
+        controller: _tabController,
+        children: const [
+          IncompleteTasksScreen(),
+          CompletedTasksScreen(),
+          AddTasksScreen(),
+        ],
+      ),
+    );
+
+    void onNavTap(int value) {
+      setState(() {
+        currentIndex = value;
+      });
+      _tabController.animateTo(value);
+    }
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -331,61 +354,87 @@ class _MainScreenState extends ConsumerState<MainScreen>
           ),
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: Appstyles.lightOceanGradient,
-        ),
-        child: TabBarView(
-          controller: _tabController,
-          children: const [
-            IncompleteTasksScreen(),
-            CompletedTasksScreen(),
-            AddTasksScreen(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Appstyles.white,
-          boxShadow: Appstyles.mediumShadow,
-        ),
-        child: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (value) {
-            setState(() {
-              currentIndex = value;
-            });
-            _tabController.animateTo(value);
-          },
-          iconSize: 24.0,
-          elevation: 0,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Appstyles.primaryBlue,
-          unselectedItemColor: Appstyles.textLight,
-          selectedLabelStyle: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 12,
-          ),
-          backgroundColor: Appstyles.white,
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.warning_amber_outlined),
-              label: AppTranslations.t(context, 'tabInProgress'),
-              activeIcon: const Icon(Icons.warning_amber),
+      body: isTablet
+          ? Row(
+              children: [
+                NavigationRail(
+                  selectedIndex: currentIndex,
+                  onDestinationSelected: onNavTap,
+                  labelType: NavigationRailLabelType.all,
+                  backgroundColor: Appstyles.white,
+                  selectedIconTheme:
+                      const IconThemeData(color: Appstyles.primaryBlue),
+                  unselectedIconTheme:
+                      IconThemeData(color: Appstyles.textLight),
+                  selectedLabelTextStyle: Appstyles.normalTextStyle.copyWith(
+                    color: Appstyles.primaryBlue,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  unselectedLabelTextStyle: Appstyles.normalTextStyle.copyWith(
+                    color: Appstyles.textLight,
+                  ),
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.warning_amber_outlined),
+                      selectedIcon: const Icon(Icons.warning_amber),
+                      label: Text(AppTranslations.t(context, 'tabInProgress')),
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.check_circle_outline),
+                      selectedIcon: const Icon(Icons.check_circle),
+                      label: Text(AppTranslations.t(context, 'tabCompleted')),
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.add_circle_outline),
+                      selectedIcon: const Icon(Icons.add_circle),
+                      label: Text(AppTranslations.t(context, 'tabAdd')),
+                    ),
+                  ],
+                ),
+                const VerticalDivider(width: 1, thickness: 1),
+                Expanded(child: tabBody),
+              ],
+            )
+          : tabBody,
+      bottomNavigationBar: isTablet
+          ? null
+          : Container(
+              decoration: BoxDecoration(
+                color: Appstyles.white,
+                boxShadow: Appstyles.mediumShadow,
+              ),
+              child: BottomNavigationBar(
+                currentIndex: currentIndex,
+                onTap: onNavTap,
+                iconSize: 24.0,
+                elevation: 0,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: Appstyles.primaryBlue,
+                unselectedItemColor: Appstyles.textLight,
+                selectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
+                backgroundColor: Appstyles.white,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: const Icon(Icons.warning_amber_outlined),
+                    label: AppTranslations.t(context, 'tabInProgress'),
+                    activeIcon: const Icon(Icons.warning_amber),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(Icons.check_circle_outline),
+                    label: AppTranslations.t(context, 'tabCompleted'),
+                    activeIcon: const Icon(Icons.check_circle),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: const Icon(Icons.add_circle_outline),
+                    label: AppTranslations.t(context, 'tabAdd'),
+                    activeIcon: const Icon(Icons.add_circle),
+                  ),
+                ],
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.check_circle_outline),
-              label: AppTranslations.t(context, 'tabCompleted'),
-              activeIcon: const Icon(Icons.check_circle),
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.add_circle_outline),
-              label: AppTranslations.t(context, 'tabAdd'),
-              activeIcon: const Icon(Icons.add_circle),
-            ),
-          ],
-        ),
-      ),
     );
   }
 

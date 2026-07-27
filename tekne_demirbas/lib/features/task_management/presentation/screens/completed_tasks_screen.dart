@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ancyra_sailing/common_widgets/adaptive_task_list.dart';
 import 'package:ancyra_sailing/common_widgets/async_value_ui.dart';
 import 'package:ancyra_sailing/common_widgets/async_value_widget.dart';
-import 'package:ancyra_sailing/features/authentication/data/auth_repository.dart';
 import 'package:ancyra_sailing/features/room_management/presentation/providers/selected_room_provider.dart';
 import 'package:ancyra_sailing/features/task_management/data/firestore_repository.dart';
 import 'package:ancyra_sailing/features/task_management/domain/task.dart';
@@ -11,14 +11,16 @@ import 'package:ancyra_sailing/features/task_management/presentation/widgets/tas
 import 'package:ancyra_sailing/features/task_management/presentation/widgets/filter_bar.dart';
 import 'package:ancyra_sailing/l10n/app_translations.dart';
 import 'package:ancyra_sailing/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/size_config.dart';
 
 class CompletedTasksScreen extends ConsumerWidget {
   const CompletedTasksScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    SizeConfig.init(context);
     final roomId = ref.watch(selectedRoomProvider);
-    
+
     if (roomId == null) {
       return Center(
         child: Column(
@@ -32,7 +34,8 @@ class CompletedTasksScreen extends ConsumerWidget {
       );
     }
 
-    final completeTaskAsyncValue = ref.watch(filteredCompletedTasksProvider(roomId));
+    final completeTaskAsyncValue =
+        ref.watch(filteredCompletedTasksProvider(roomId));
 
     ref.listen<AsyncValue>(loadTasksProvider(roomId), (_, state) {
       state.showAlertDialogOnError(context);
@@ -44,23 +47,24 @@ class CompletedTasksScreen extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          FilterBar(filterControllerProvider: completedTasksFilterControllerProvider),
+          ResponsiveCenter(
+            maxWidth: SizeConfig.contentMaxWidth,
+            child: FilterBar(
+              filterControllerProvider:
+                  completedTasksFilterControllerProvider,
+            ),
+          ),
           Expanded(
             child: AsyncValueWidget<List<Task>>(
               value: completeTaskAsyncValue,
               data: (tasks) {
-                return tasks.isEmpty
-                    ? Center(child: Text(AppTranslations.t(context, 'noTasksYet')))
-                    : ListView.separated(
-                        itemBuilder: (ctx, index) {
-                          final task = tasks[index];
-
-                          return TaskItem(task: task);
-                        },
-                        separatorBuilder: (ctx, height) =>
-                            const Divider(height: 2, color: Colors.blue),
-                        itemCount: tasks.length,
-                      );
+                return AdaptiveTaskList(
+                  itemCount: tasks.length,
+                  empty: Center(
+                    child: Text(AppTranslations.t(context, 'noTasksYet')),
+                  ),
+                  itemBuilder: (ctx, index) => TaskItem(task: tasks[index]),
+                );
               },
             ),
           ),

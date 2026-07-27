@@ -274,9 +274,12 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
       decoration: const BoxDecoration(
         gradient: Appstyles.lightOceanGradient,
       ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-        child: Column(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: SizeConfig.formMaxWidth),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             boatTypeAsync.when(
@@ -864,6 +867,8 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
           ],
         ),
       ),
-      );
+        ),
+      ),
+    );
   }
 }

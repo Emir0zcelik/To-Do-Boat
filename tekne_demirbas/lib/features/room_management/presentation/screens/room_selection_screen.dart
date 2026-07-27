@@ -1295,9 +1295,16 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
         decoration: const BoxDecoration(
           gradient: Appstyles.lightOceanGradient,
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: SizeConfig.isTabletOf(context)
+                  ? SizeConfig.contentMaxWidth
+                  : double.infinity,
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Butonlar - Admin kontrolüne göre gösterilir
@@ -1686,6 +1693,8 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
           ),
         ),
       ),
+        ),
+      ),
     );
   }
 
@@ -1698,6 +1707,13 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
           borderRadius: BorderRadius.circular(Appstyles.borderRadiusLarge),
         ),
         child: Container(
+          width: SizeConfig.contentWidthOf(
+            context,
+            maxWidth: SizeConfig.dialogMaxWidth,
+          ),
+          constraints: const BoxConstraints(
+            maxWidth: SizeConfig.dialogMaxWidth,
+          ),
           decoration: BoxDecoration(
             color: Appstyles.white,
             borderRadius: BorderRadius.circular(Appstyles.borderRadiusLarge),
@@ -1883,6 +1899,13 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
           borderRadius: BorderRadius.circular(Appstyles.borderRadiusLarge),
         ),
         child: Container(
+          width: SizeConfig.contentWidthOf(
+            context,
+            maxWidth: SizeConfig.dialogMaxWidth,
+          ),
+          constraints: const BoxConstraints(
+            maxWidth: SizeConfig.dialogMaxWidth,
+          ),
           decoration: BoxDecoration(
             color: Appstyles.white,
             borderRadius: BorderRadius.circular(Appstyles.borderRadiusLarge),

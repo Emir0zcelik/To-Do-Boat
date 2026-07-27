@@ -8,6 +8,7 @@ import 'package:ancyra_sailing/features/task_management/presentation/providers/t
 import 'package:ancyra_sailing/features/task_management/presentation/providers/boat_type_provider.dart';
 import 'package:ancyra_sailing/l10n/app_translations.dart';
 import 'package:ancyra_sailing/utils/appstyles.dart';
+import 'package:ancyra_sailing/utils/size_config.dart';
 
 class FilterBottomSheet extends ConsumerStatefulWidget {
   final dynamic filterControllerProvider;
@@ -48,7 +49,15 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
         ? ref.watch(firestore_repo.loadTasksProvider(roomId))
         : null;
 
-    return Container(
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: SizeConfig.isTabletOf(context)
+              ? SizeConfig.dialogMaxWidth
+              : double.infinity,
+        ),
+        child: Container(
       decoration: BoxDecoration(
         color: Appstyles.white,
         borderRadius: BorderRadius.only(
@@ -505,6 +514,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
           ],
         ),
       ),
+      ),
+        ),
       ),
     );
   }

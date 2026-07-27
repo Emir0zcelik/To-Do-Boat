@@ -47,8 +47,11 @@ class AccountScreen extends ConsumerWidget {
     final currentAppLocale = AppLocale.fromLocale(currentLocale);
 
     return Center(
-      child: SingleChildScrollView(
-        child: Column(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: SizeConfig.formMaxWidth),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
@@ -71,7 +74,7 @@ class AccountScreen extends ConsumerWidget {
             ),
             SizedBox(height: SizeConfig.getProportionateHeight(8)),
             SizedBox(
-              width: SizeConfig.screenWidth * 0.75,
+              width: double.infinity,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(
@@ -150,7 +153,7 @@ class AccountScreen extends ConsumerWidget {
               child: Container(
                 alignment: Alignment.center,
                 height: SizeConfig.getProportionateHeight(50),
-                width: SizeConfig.screenWidth * 0.80,
+                width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   borderRadius: BorderRadius.circular(20),
@@ -170,7 +173,7 @@ class AccountScreen extends ConsumerWidget {
               child: Container(
                 alignment: Alignment.center,
                 height: SizeConfig.getProportionateHeight(50),
-                width: SizeConfig.screenWidth * 0.80,
+                width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.red.shade600,
                   borderRadius: BorderRadius.circular(20),
@@ -186,6 +189,7 @@ class AccountScreen extends ConsumerWidget {
             ),
             SizedBox(height: SizeConfig.getProportionateHeight(24)),
           ],
+        ),
         ),
       ),
     );
