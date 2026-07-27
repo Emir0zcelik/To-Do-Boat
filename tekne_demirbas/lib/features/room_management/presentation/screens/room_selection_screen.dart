@@ -1247,23 +1247,25 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Appstyles.white,
+        toolbarHeight: SizeConfig.toolbarHeight,
         title: Text(
           AppTranslations.t(context, 'roomSelect'),
           style: Appstyles.headingTextStyle.copyWith(
             color: Appstyles.primaryBlue,
-            fontSize: 20,
+            fontSize: SizeConfig.sp(20),
           ),
         ),
         automaticallyImplyLeading: false,
         leading: Container(
-          margin: const EdgeInsets.all(8),
+          margin: EdgeInsets.all(SizeConfig.sp(8)),
           decoration: BoxDecoration(
             color: Appstyles.lightBlue,
             shape: BoxShape.circle,
             boxShadow: Appstyles.softShadow,
           ),
           child: IconButton(
-            icon: const Icon(Icons.person, color: Appstyles.primaryBlue),
+            icon: Icon(Icons.person,
+                color: Appstyles.primaryBlue, size: SizeConfig.iconMd),
             onPressed: () => context.push('/account'),
             tooltip: AppTranslations.t(context, 'myAccount'),
           ),
@@ -1271,14 +1273,24 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
         actions: [
           // Dil seçici
           Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(right: SizeConfig.sp(8)),
             child: DropdownButton<AppLocale>(
               value: currentAppLocale,
               underline: const SizedBox.shrink(),
+              style: TextStyle(
+                fontSize: SizeConfig.sp(14),
+                color: Appstyles.primaryBlue,
+              ),
               items: AppLocale.values
                   .map((appLocale) => DropdownMenuItem<AppLocale>(
                         value: appLocale,
-                        child: Text(appLocale.displayName, style: TextStyle(fontSize: 14, color: Appstyles.primaryBlue)),
+                        child: Text(
+                          appLocale.displayName,
+                          style: TextStyle(
+                            fontSize: SizeConfig.sp(14),
+                            color: Appstyles.primaryBlue,
+                          ),
+                        ),
                       ))
                   .toList(),
               onChanged: (appLocale) async {
@@ -1289,22 +1301,18 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
             ),
           ),
         ],
-        iconTheme: IconThemeData(color: Appstyles.primaryBlue),
+        iconTheme: IconThemeData(
+          color: Appstyles.primaryBlue,
+          size: SizeConfig.iconMd,
+        ),
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: Appstyles.lightOceanGradient,
         ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: SizeConfig.isTabletOf(context)
-                  ? SizeConfig.contentMaxWidth
-                  : double.infinity,
-            ),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Butonlar - Admin kontrolüne göre gösterilir
@@ -1322,21 +1330,27 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                         ),
                         child: ElevatedButton.icon(
                           onPressed: () => _showCreateRoomDialog(context, user),
-                          icon: const Icon(Icons.add_business, size: 22),
+                          icon: Icon(Icons.add_business, size: SizeConfig.sp(22)),
                           label: Text(
                             AppTranslations.t(context, 'createRoom'),
                             style: Appstyles.titleTextStyle.copyWith(
                               color: Appstyles.white,
                               fontWeight: FontWeight.w600,
+                              fontSize: SizeConfig.sp(16),
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                            minimumSize: Size(0, SizeConfig.buttonHeight),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.sp(24),
+                              vertical: SizeConfig.sp(18),
+                            ),
                             foregroundColor: Appstyles.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(Appstyles.borderRadiusMedium),
+                              borderRadius: BorderRadius.circular(
+                                  Appstyles.borderRadiusMedium),
                             ),
                             elevation: 0,
                           ),
@@ -1360,21 +1374,27 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                             ),
                             child: ElevatedButton.icon(
                               onPressed: () => _showJoinRoomDialog(context, user),
-                              icon: const Icon(Icons.login, size: 22),
+                              icon: Icon(Icons.login, size: SizeConfig.sp(22)),
                               label: Text(
                                 AppTranslations.t(context, 'joinRoom'),
                                 style: Appstyles.titleTextStyle.copyWith(
                                   color: Appstyles.white,
                                   fontWeight: FontWeight.w600,
+                                  fontSize: SizeConfig.sp(16),
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                                minimumSize: Size(0, SizeConfig.buttonHeight),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.sp(24),
+                                  vertical: SizeConfig.sp(18),
+                                ),
                                 foregroundColor: Appstyles.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(Appstyles.borderRadiusMedium),
+                                  borderRadius: BorderRadius.circular(
+                                      Appstyles.borderRadiusMedium),
                                 ),
                                 elevation: 0,
                               ),
@@ -1394,21 +1414,27 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                           ),
                           child: ElevatedButton.icon(
                             onPressed: () => _showJoinRoomDialog(context, user),
-                            icon: const Icon(Icons.login, size: 22),
+                            icon: Icon(Icons.login, size: SizeConfig.sp(22)),
                             label: Text(
                               AppTranslations.t(context, 'joinRoom'),
                               style: Appstyles.titleTextStyle.copyWith(
                                 color: Appstyles.white,
                                 fontWeight: FontWeight.w600,
+                                fontSize: SizeConfig.sp(16),
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent,
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                              minimumSize: Size(0, SizeConfig.buttonHeight),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.sp(24),
+                                vertical: SizeConfig.sp(18),
+                              ),
                               foregroundColor: Appstyles.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(Appstyles.borderRadiusMedium),
+                                borderRadius: BorderRadius.circular(
+                                    Appstyles.borderRadiusMedium),
                               ),
                               elevation: 0,
                             ),
@@ -1693,8 +1719,6 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
           ),
         ),
       ),
-        ),
-      ),
     );
   }
 
@@ -1707,13 +1731,6 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
           borderRadius: BorderRadius.circular(Appstyles.borderRadiusLarge),
         ),
         child: Container(
-          width: SizeConfig.contentWidthOf(
-            context,
-            maxWidth: SizeConfig.dialogMaxWidth,
-          ),
-          constraints: const BoxConstraints(
-            maxWidth: SizeConfig.dialogMaxWidth,
-          ),
           decoration: BoxDecoration(
             color: Appstyles.white,
             borderRadius: BorderRadius.circular(Appstyles.borderRadiusLarge),
@@ -1899,13 +1916,6 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
           borderRadius: BorderRadius.circular(Appstyles.borderRadiusLarge),
         ),
         child: Container(
-          width: SizeConfig.contentWidthOf(
-            context,
-            maxWidth: SizeConfig.dialogMaxWidth,
-          ),
-          constraints: const BoxConstraints(
-            maxWidth: SizeConfig.dialogMaxWidth,
-          ),
           decoration: BoxDecoration(
             color: Appstyles.white,
             borderRadius: BorderRadius.circular(Appstyles.borderRadiusLarge),

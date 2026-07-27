@@ -274,12 +274,9 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
       decoration: const BoxDecoration(
         gradient: Appstyles.lightOceanGradient,
       ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: SizeConfig.formMaxWidth),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-            child: Column(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             boatTypeAsync.when(
@@ -454,7 +451,7 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
                     boxShadow: Appstyles.mediumShadow,
                   ),
                   child: IconButton(
-                    iconSize: 50,
+                    iconSize: SizeConfig.sp(50),
                     icon: const Icon(Icons.camera_alt, color: Appstyles.white),
                     onPressed: () => _showMediaTypePicker(fromCamera: true),
                   ),
@@ -471,7 +468,7 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
                     boxShadow: Appstyles.mediumShadow,
                   ),
                   child: IconButton(
-                    iconSize: 50,
+                    iconSize: SizeConfig.sp(50),
                     icon: const Icon(Icons.photo_library, color: Appstyles.white),
                     onPressed: () => _showMediaTypePicker(fromCamera: false),
                   ),
@@ -867,8 +864,6 @@ class _AddTasksScreenState extends ConsumerState<AddTasksScreen> {
           ],
         ),
       ),
-        ),
-      ),
-    );
+      );
   }
 }

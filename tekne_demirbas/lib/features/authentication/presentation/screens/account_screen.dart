@@ -21,7 +21,11 @@ class AccountScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppTranslations.t(context, 'myAccount')),
+        title: Text(
+          AppTranslations.t(context, 'myAccount'),
+          style: TextStyle(fontSize: SizeConfig.sp(20)),
+        ),
+        toolbarHeight: SizeConfig.toolbarHeight,
       ),
       body: SafeArea(
         child: currentUserAsync.when(
@@ -47,11 +51,8 @@ class AccountScreen extends ConsumerWidget {
     final currentAppLocale = AppLocale.fromLocale(currentLocale);
 
     return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: SizeConfig.formMaxWidth),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
+      child: SingleChildScrollView(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
@@ -74,7 +75,7 @@ class AccountScreen extends ConsumerWidget {
             ),
             SizedBox(height: SizeConfig.getProportionateHeight(8)),
             SizedBox(
-              width: double.infinity,
+              width: SizeConfig.screenWidth * 0.75,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(
@@ -152,8 +153,8 @@ class AccountScreen extends ConsumerWidget {
               },
               child: Container(
                 alignment: Alignment.center,
-                height: SizeConfig.getProportionateHeight(50),
-                width: double.infinity,
+                height: SizeConfig.buttonHeight,
+                width: SizeConfig.screenWidth * 0.80,
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   borderRadius: BorderRadius.circular(20),
@@ -172,8 +173,8 @@ class AccountScreen extends ConsumerWidget {
               onTap: () => _showDeleteAccountDialog(context, ref),
               child: Container(
                 alignment: Alignment.center,
-                height: SizeConfig.getProportionateHeight(50),
-                width: double.infinity,
+                height: SizeConfig.buttonHeight,
+                width: SizeConfig.screenWidth * 0.80,
                 decoration: BoxDecoration(
                   color: Colors.red.shade600,
                   borderRadius: BorderRadius.circular(20),
@@ -189,7 +190,6 @@ class AccountScreen extends ConsumerWidget {
             ),
             SizedBox(height: SizeConfig.getProportionateHeight(24)),
           ],
-        ),
         ),
       ),
     );

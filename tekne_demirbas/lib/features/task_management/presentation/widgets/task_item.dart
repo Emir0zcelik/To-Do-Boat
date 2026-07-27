@@ -1151,10 +1151,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
     return GestureDetector(
       onTap: _showTaskDetail,
       child: Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.isTabletOf(context) ? 4 : 16,
-          vertical: 4,
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Appstyles.borderRadiusMedium),

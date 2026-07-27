@@ -5,7 +5,6 @@ import 'package:ancyra_sailing/features/room_management/data/room_repository.dar
 import 'package:ancyra_sailing/features/room_management/domain/permission.dart';
 import 'package:ancyra_sailing/features/room_management/domain/room.dart';
 import 'package:ancyra_sailing/l10n/app_translations.dart';
-import 'package:ancyra_sailing/utils/size_config.dart';
 
 class RoomManagementDialog extends ConsumerWidget {
   final String roomId;
@@ -26,15 +25,8 @@ class RoomManagementDialog extends ConsumerWidget {
 
     return Dialog(
       child: Container(
-        width: SizeConfig.contentWidthOf(
-          context,
-          maxWidth: SizeConfig.dialogMaxWidth,
-        ),
-        constraints: const BoxConstraints(
-          minWidth: 360,
-          maxWidth: SizeConfig.dialogMaxWidth,
-          maxHeight: 600,
-        ),
+        width: MediaQuery.of(context).size.width * 0.9,
+        constraints: const BoxConstraints(maxHeight: 600),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

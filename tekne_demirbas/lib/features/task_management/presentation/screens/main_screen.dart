@@ -93,43 +93,21 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
     final currentUserAsync = ref.watch(currentUserProvider);
     
-    final isTablet = SizeConfig.isTabletOf(context);
-
-    final tabBody = Container(
-      decoration: const BoxDecoration(
-        gradient: Appstyles.lightOceanGradient,
-      ),
-      child: TabBarView(
-        controller: _tabController,
-        children: const [
-          IncompleteTasksScreen(),
-          CompletedTasksScreen(),
-          AddTasksScreen(),
-        ],
-      ),
-    );
-
-    void onNavTap(int value) {
-      setState(() {
-        currentIndex = value;
-      });
-      _tabController.animateTo(value);
-    }
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Appstyles.white,
+        toolbarHeight: SizeConfig.toolbarHeight,
         leading: Container(
-          margin: const EdgeInsets.all(8),
+          margin: EdgeInsets.all(SizeConfig.sp(8)),
           decoration: BoxDecoration(
             color: Appstyles.lightBlue,
             shape: BoxShape.circle,
             boxShadow: Appstyles.softShadow,
           ),
           child: IconButton(
-            icon: const Icon(Icons.person),
+            icon: Icon(Icons.person, size: SizeConfig.iconMd),
             color: Appstyles.primaryBlue,
             onPressed: () => context.push('/account'),
             tooltip: AppTranslations.t(context, 'myAccount'),
@@ -139,10 +117,13 @@ class _MainScreenState extends ConsumerState<MainScreen>
           _getPageTitle(context, currentIndex),
           style: Appstyles.headingTextStyle.copyWith(
             color: Appstyles.primaryBlue,
-            fontSize: 20,
+            fontSize: SizeConfig.sp(20),
           ),
         ),
-        iconTheme: IconThemeData(color: Appstyles.primaryBlue),
+        iconTheme: IconThemeData(
+          color: Appstyles.primaryBlue,
+          size: SizeConfig.iconMd,
+        ),
         actions: [
           // Oda Seçimi
           roomAsync?.when(
@@ -156,7 +137,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
               return PopupMenuButton<String>(
                 tooltip: AppTranslations.t(context, 'roomInfo'),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(SizeConfig.sp(8)),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Appstyles.lightBlue,
@@ -164,44 +145,44 @@ class _MainScreenState extends ConsumerState<MainScreen>
                       boxShadow: Appstyles.softShadow,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(SizeConfig.sp(8)),
                       child: pendingRequestsAsync?.when(
                             data: (count) => count > 0
                                 ? Badge(
                                     label: Text(
                                       '$count',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Appstyles.white,
-                                        fontSize: 10,
+                                        fontSize: SizeConfig.sp(10),
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.info_outline,
                                       color: Appstyles.primaryBlue,
-                                      size: 24,
+                                      size: SizeConfig.iconMd,
                                     ),
                                   )
-                                : const Icon(
+                                : Icon(
                                     Icons.info_outline,
                                     color: Appstyles.primaryBlue,
-                                    size: 24,
+                                    size: SizeConfig.iconMd,
                                   ),
-                            loading: () => const Icon(
+                            loading: () => Icon(
                               Icons.info_outline,
                               color: Appstyles.primaryBlue,
-                              size: 24,
+                              size: SizeConfig.iconMd,
                             ),
-                            error: (_, __) => const Icon(
+                            error: (_, __) => Icon(
                               Icons.info_outline,
                               color: Appstyles.primaryBlue,
-                              size: 24,
+                              size: SizeConfig.iconMd,
                             ),
                           ) ??
-                          const Icon(
+                          Icon(
                             Icons.info_outline,
                             color: Appstyles.primaryBlue,
-                            size: 24,
+                            size: SizeConfig.iconMd,
                           ),
                     ),
                   ),
@@ -354,87 +335,69 @@ class _MainScreenState extends ConsumerState<MainScreen>
           ),
         ],
       ),
-      body: isTablet
-          ? Row(
-              children: [
-                NavigationRail(
-                  selectedIndex: currentIndex,
-                  onDestinationSelected: onNavTap,
-                  labelType: NavigationRailLabelType.all,
-                  backgroundColor: Appstyles.white,
-                  selectedIconTheme:
-                      const IconThemeData(color: Appstyles.primaryBlue),
-                  unselectedIconTheme:
-                      IconThemeData(color: Appstyles.textLight),
-                  selectedLabelTextStyle: Appstyles.normalTextStyle.copyWith(
-                    color: Appstyles.primaryBlue,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  unselectedLabelTextStyle: Appstyles.normalTextStyle.copyWith(
-                    color: Appstyles.textLight,
-                  ),
-                  destinations: [
-                    NavigationRailDestination(
-                      icon: const Icon(Icons.warning_amber_outlined),
-                      selectedIcon: const Icon(Icons.warning_amber),
-                      label: Text(AppTranslations.t(context, 'tabInProgress')),
-                    ),
-                    NavigationRailDestination(
-                      icon: const Icon(Icons.check_circle_outline),
-                      selectedIcon: const Icon(Icons.check_circle),
-                      label: Text(AppTranslations.t(context, 'tabCompleted')),
-                    ),
-                    NavigationRailDestination(
-                      icon: const Icon(Icons.add_circle_outline),
-                      selectedIcon: const Icon(Icons.add_circle),
-                      label: Text(AppTranslations.t(context, 'tabAdd')),
-                    ),
-                  ],
-                ),
-                const VerticalDivider(width: 1, thickness: 1),
-                Expanded(child: tabBody),
-              ],
-            )
-          : tabBody,
-      bottomNavigationBar: isTablet
-          ? null
-          : Container(
-              decoration: BoxDecoration(
-                color: Appstyles.white,
-                boxShadow: Appstyles.mediumShadow,
-              ),
-              child: BottomNavigationBar(
-                currentIndex: currentIndex,
-                onTap: onNavTap,
-                iconSize: 24.0,
-                elevation: 0,
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: Appstyles.primaryBlue,
-                unselectedItemColor: Appstyles.textLight,
-                selectedLabelStyle: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                ),
-                backgroundColor: Appstyles.white,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: const Icon(Icons.warning_amber_outlined),
-                    label: AppTranslations.t(context, 'tabInProgress'),
-                    activeIcon: const Icon(Icons.warning_amber),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: const Icon(Icons.check_circle_outline),
-                    label: AppTranslations.t(context, 'tabCompleted'),
-                    activeIcon: const Icon(Icons.check_circle),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: const Icon(Icons.add_circle_outline),
-                    label: AppTranslations.t(context, 'tabAdd'),
-                    activeIcon: const Icon(Icons.add_circle),
-                  ),
-                ],
-              ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: Appstyles.lightOceanGradient,
+        ),
+        child: TabBarView(
+          controller: _tabController,
+          children: const [
+            IncompleteTasksScreen(),
+            CompletedTasksScreen(),
+            AddTasksScreen(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: SizeConfig.bottomNavHeight +
+            MediaQuery.paddingOf(context).bottom,
+        decoration: BoxDecoration(
+          color: Appstyles.white,
+          boxShadow: Appstyles.mediumShadow,
+        ),
+        child: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: (value) {
+            setState(() {
+              currentIndex = value;
+            });
+            _tabController.animateTo(value);
+          },
+          iconSize: SizeConfig.sp(26),
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Appstyles.primaryBlue,
+          unselectedItemColor: Appstyles.textLight,
+          selectedFontSize: SizeConfig.sp(13),
+          unselectedFontSize: SizeConfig.sp(12),
+          selectedLabelStyle: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: SizeConfig.sp(13),
+          ),
+          unselectedLabelStyle: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: SizeConfig.sp(12),
+          ),
+          backgroundColor: Appstyles.white,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.warning_amber_outlined, size: SizeConfig.sp(26)),
+              label: AppTranslations.t(context, 'tabInProgress'),
+              activeIcon: Icon(Icons.warning_amber, size: SizeConfig.sp(28)),
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.check_circle_outline, size: SizeConfig.sp(26)),
+              label: AppTranslations.t(context, 'tabCompleted'),
+              activeIcon: Icon(Icons.check_circle, size: SizeConfig.sp(28)),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_circle_outline, size: SizeConfig.sp(26)),
+              label: AppTranslations.t(context, 'tabAdd'),
+              activeIcon: Icon(Icons.add_circle, size: SizeConfig.sp(28)),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
