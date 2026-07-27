@@ -163,7 +163,8 @@ class AccountScreen extends ConsumerWidget {
                   AppTranslations.t(context, 'signOut'),
                   style: Appstyles.normalTextStyle.copyWith(
                     color: Colors.white,
-                    fontSize: 25,
+                    fontSize: SizeConfig.sp(18),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -183,7 +184,8 @@ class AccountScreen extends ConsumerWidget {
                   AppTranslations.t(context, 'deleteAccount'),
                   style: Appstyles.normalTextStyle.copyWith(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: SizeConfig.sp(18),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
