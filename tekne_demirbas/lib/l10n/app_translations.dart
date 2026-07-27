@@ -452,7 +452,7 @@ class AppTranslations {
       'roomNotFound': 'Комната с таким кодом не найдена',
       'joinRequestSent': 'Запрос на вступление отправлен в',
       'leaveRoomSuccess': 'Вы вышли из комнаты',
-      'changeRoomName': 'Изменить название комнаты',
+      'changeRoomName': 'Изменить название',
       'newRoomName': 'Новое название комнаты',
       'roomNameUpdated': 'Название комнаты обновлено',
       'leaveRoomConfirm': 'Вы уверены, что хотите выйти?\n\nДоступ к комнате будет отозван.',

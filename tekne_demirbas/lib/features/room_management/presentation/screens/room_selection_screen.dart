@@ -1529,6 +1529,10 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                           children: [
                             PopupMenuButton<String>(
                               icon: Icon(Icons.more_vert, color: Appstyles.primaryBlue),
+                              constraints: const BoxConstraints(
+                                minWidth: 200,
+                                maxWidth: 280,
+                              ),
                               onSelected: (value) {
                                 if (value == 'edit') {
                                   _editRoomName(context, room);
@@ -1546,9 +1550,14 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                                       children: [
                                         Icon(Icons.edit, color: Appstyles.primaryBlue),
                                         const SizedBox(width: 8),
-                                        Text(
-                                          AppTranslations.t(context, 'changeRoomName'),
-                                          style: Appstyles.normalTextStyle.copyWith(color: Appstyles.textDark),
+                                        Flexible(
+                                          child: Text(
+                                            AppTranslations.t(context, 'changeRoomName'),
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Appstyles.normalTextStyle.copyWith(color: Appstyles.textDark),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1559,9 +1568,14 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                                       children: [
                                         const Icon(Icons.delete, color: Colors.red),
                                         const SizedBox(width: 8),
-                                        Text(
-                                          AppTranslations.t(context, 'deleteRoom'),
-                                          style: Appstyles.normalTextStyle.copyWith(color: Colors.red),
+                                        Flexible(
+                                          child: Text(
+                                            AppTranslations.t(context, 'deleteRoom'),
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Appstyles.normalTextStyle.copyWith(color: Colors.red),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1573,9 +1587,14 @@ class _RoomSelectionScreenState extends ConsumerState<RoomSelectionScreen> {
                                       children: [
                                         const Icon(Icons.exit_to_app, color: Colors.red),
                                         const SizedBox(width: 8),
-                                        Text(
-                                          AppTranslations.t(context, 'leaveRoom'),
-                                          style: Appstyles.normalTextStyle.copyWith(color: Colors.red),
+                                        Flexible(
+                                          child: Text(
+                                            AppTranslations.t(context, 'leaveRoom'),
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Appstyles.normalTextStyle.copyWith(color: Colors.red),
+                                          ),
                                         ),
                                       ],
                                     ),
