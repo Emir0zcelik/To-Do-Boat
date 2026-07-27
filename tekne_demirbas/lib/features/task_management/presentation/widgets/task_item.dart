@@ -14,6 +14,7 @@ import 'package:ancyra_sailing/features/task_management/domain/task.dart';
 import 'package:ancyra_sailing/features/task_management/presentation/firestore_controller.dart';
 import 'package:ancyra_sailing/features/task_management/presentation/providers/boat_type_provider.dart' as boat_provider;
 import 'package:ancyra_sailing/features/task_management/presentation/providers/task_type_provider.dart' as task_provider;
+import 'package:ancyra_sailing/features/task_management/presentation/widgets/task_complete_burst.dart';
 import 'package:ancyra_sailing/l10n/app_translations.dart';
 import 'package:ancyra_sailing/utils/appstyles.dart';
 import 'package:ancyra_sailing/utils/size_config.dart';
@@ -65,20 +66,15 @@ class _TaskItemState extends ConsumerState<TaskItem> {
     final List<File> newImages = [];
     File? newVideo;
     VideoPlayerController? newVideoController;
+    bool isUpdating = false;
 
     showDialog(
       context: context,
       useRootNavigator: true,
+      barrierDismissible: false,
       builder: (ctx) {
         // Dialog kapatıldığında video controller'ı temizle
-        return PopScope(
-          canPop: true,
-          onPopInvokedWithResult: (didPop, _) {
-            if (didPop) {
-              newVideoController?.dispose();
-            }
-          },
-          child: Consumer(
+        return Consumer(
             builder: (context, ref, _) {
           final boatTypeAsync = ref.watch(boat_provider.boatTypesProvider);
           final taskTypeAsync = ref.watch(task_provider.taskTypesProvider);
@@ -90,7 +86,14 @@ class _TaskItemState extends ConsumerState<TaskItem> {
               final dialogMaxWidth = isTablet ? 520.0 : screen.width * 0.92;
               final dialogMaxHeight = screen.height * (isTablet ? 0.72 : 0.55);
 
-              return AlertDialog(
+              return PopScope(
+              canPop: !isUpdating,
+              onPopInvokedWithResult: (didPop, _) {
+                if (didPop) {
+                  newVideoController?.dispose();
+                }
+              },
+              child: AlertDialog(
               insetPadding: EdgeInsets.symmetric(
                 horizontal: isTablet ? 40 : 16,
                 vertical: isTablet ? 28 : 24,
@@ -639,10 +642,12 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       children: [
                         if (canDelete)
                           TextButton.icon(
-                            onPressed: () {
-                              context.pop();
-                              _showDeleteConfirmation();
-                            },
+                            onPressed: isUpdating
+                                ? null
+                                : () {
+                                    context.pop();
+                                    _showDeleteConfirmation();
+                                  },
                             icon: const Icon(Icons.delete, color: Colors.red),
                             label: Text(
                               AppTranslations.t(context, 'delete'),
@@ -650,7 +655,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                             ),
                           ),
                         OutlinedButton(
-                          onPressed: () => context.pop(),
+                          onPressed: isUpdating ? null : () => context.pop(),
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -663,15 +668,17 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                         ),
                         if (canEdit)
                           ElevatedButton(
-                          onPressed: () async {
+                          onPressed: isUpdating
+                              ? null
+                              : () async {
                             final descriptionText = descriptionController.text.trim();
                             if (descriptionText.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                          content: const Text(
-                            'Görev açıklaması boş olamaz',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                                  content: Text(
+                                    AppTranslations.t(context, 'taskDescEmpty'),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
                                   backgroundColor: Colors.red.shade400,
                                   behavior: SnackBarBehavior.floating,
                                   shape: RoundedRectangleBorder(
@@ -682,6 +689,9 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                               return;
                             }
 
+                            setDialogState(() => isUpdating = true);
+
+                            try {
                             // Silinen medyaları tespit et (mevcutlardan kaldırılanlar)
                             final deletedImageUrls = widget.task.imageUrls
                                 .where((url) => !existingImageUrls.contains(url))
@@ -701,10 +711,11 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                   newImageUrls = await storageRepo.uploadImages(newImages, taskId);
                                 } catch (e) {
                                   if (context.mounted) {
+                                    setDialogState(() => isUpdating = false);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'Resimler yüklenirken hata: $e',
+                                          '${AppTranslations.t(context, 'imagesUploadError')}: $e',
                                           style: const TextStyle(color: Colors.white),
                                         ),
                                         backgroundColor: Colors.red.shade400,
@@ -725,10 +736,11 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                   newVideoUrl = await storageRepo.uploadVideo(newVideo!, taskId);
                                 } catch (e) {
                                   if (context.mounted) {
+                                    setDialogState(() => isUpdating = false);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'Video yüklenirken hata: $e',
+                                          '${AppTranslations.t(context, 'videoUploadError')}: $e',
                                           style: const TextStyle(color: Colors.white),
                                         ),
                                         backgroundColor: Colors.red.shade400,
@@ -784,13 +796,9 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                               videoUrl: finalVideoUrl,
                             );
 
-                            // Dialog'u hemen kapat
-                            if (context.mounted) {
-                              context.pop();
-                            }
-                            
                             // Video controller'ı temizle
                             newVideoController?.dispose();
+                            newVideoController = null;
                             
                             // Görevi güncelle
                             await ref
@@ -802,14 +810,14 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                   deletedImageUrls: deletedImageUrls,
                                   deletedVideoUrl: deletedVideoUrl,
                                 );
-                            
-                            // Başarı mesajını göster
+
                             if (context.mounted) {
+                              context.pop();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: const Text(
-                                    'Görev başarıyla güncellendi!',
-                                    style: TextStyle(color: Colors.white),
+                                  content: Text(
+                                    AppTranslations.t(context, 'taskUpdatedSuccess'),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                   backgroundColor: Colors.green.shade400,
                                   behavior: SnackBarBehavior.floating,
@@ -819,6 +827,24 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                 ),
                               );
                             }
+                            } catch (e) {
+                              if (context.mounted) {
+                                setDialogState(() => isUpdating = false);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '${AppTranslations.t(context, 'errorPrefix')}: $e',
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
+                                    backgroundColor: Colors.red.shade400,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
@@ -826,22 +852,31 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                                child: Text(
-                                  AppTranslations.t(context, 'update'),
-                                  style: const TextStyle(color: Colors.white),
-                                ),
+                                child: isUpdating
+                                    ? const SizedBox(
+                                        width: 22,
+                                        height: 22,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2.5,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        AppTranslations.t(context, 'update'),
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
                               ),
                       ],
                     );
                   },
                 ),
               ],
-            );
+            ),
+              );
             },
           );
             },
-          ),
-        );
+          );
       },
     );
   }
@@ -1255,7 +1290,9 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                         onTap: () {},
                         child: Transform.scale(
                           scale: 2.0,
-                          child: Checkbox(
+                          child: Builder(
+                            builder: (checkboxContext) {
+                              return Checkbox(
                             value: widget.task.isComplete,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             visualDensity: VisualDensity.compact,
@@ -1266,9 +1303,10 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                               if (!canEdit) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: const Text(
-                                      'Görev durumunu değiştirme yetkiniz yok. Sadece görüntüleme yetkiniz var.',
-                                      style: TextStyle(color: Colors.white),
+                                    content: Text(
+                                      AppTranslations.t(
+                                          context, 'noChangeStatusPermission'),
+                                      style: const TextStyle(color: Colors.white),
                                     ),
                                     backgroundColor: Colors.red.shade400,
                                     behavior: SnackBarBehavior.floating,
@@ -1279,10 +1317,26 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                                 );
                                 return;
                               }
+
+                              // Devam edenden tamamlanana geçişte particle patlaması
+                              if (value && !widget.task.isComplete) {
+                                final box = checkboxContext.findRenderObject()
+                                    as RenderBox?;
+                                Offset? origin;
+                                if (box != null && box.hasSize) {
+                                  origin = box.localToGlobal(
+                                    box.size.center(Offset.zero),
+                                  );
+                                }
+                                showTaskCompleteBurst(context, origin: origin);
+                              }
+
                               ref.read(firestoreRepositoryProvider).updateTaskCompletion(
                                     taskId: widget.task.id,
                                     isComplete: value,
                                   );
+                            },
+                              );
                             },
                           ),
                         ),
