@@ -6,7 +6,6 @@ import 'package:ancyra_sailing/features/task_management/data/firestore_repositor
 import 'package:ancyra_sailing/features/task_management/domain/task_filter.dart';
 import 'package:ancyra_sailing/features/task_management/presentation/providers/task_filter_provider.dart';
 import 'package:ancyra_sailing/features/task_management/presentation/providers/boat_type_provider.dart';
-import 'package:ancyra_sailing/features/task_management/presentation/providers/task_type_provider.dart';
 import 'package:ancyra_sailing/l10n/app_translations.dart';
 import 'package:ancyra_sailing/utils/appstyles.dart';
 
@@ -43,9 +42,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
 
     final roomId = ref.watch(selectedRoomProvider);
     final boatTypeAsync = ref.watch(boatTypesProvider);
-    final taskTypeAsync = ref.watch(taskTypesProvider);
     
-    // Odadaki görevlerden kullanıcıları al (odaya ait kullanıcılar değil, görevi olan kullanıcılar)
+    // Odadaki görevlerden kullanıcıları ve iş türlerini al
     final roomTasksAsync = roomId != null 
         ? ref.watch(firestore_repo.loadTasksProvider(roomId))
         : null;
@@ -166,14 +164,29 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
 
             const SizedBox(height: 10),
 
-            /// 🧰 İŞ TÜRÜ
-            taskTypeAsync.when(
-              data: (tasks) {
-                if (tasks.isEmpty) {
-                  return Text(AppTranslations.t(context, 'noTaskTypesYet'));
-                }
-                return DropdownButtonFormField<String>(
-                  value: _selectedTaskType,
+            /// 🧰 İŞ TÜRÜ — odadaki görevlerde kullanılan türler
+            /// (silinmiş türler de görevlerde kaldığı sürece listede görünür)
+            if (roomId != null && roomTasksAsync != null)
+              roomTasksAsync.when(
+                data: (tasks) {
+                  final uniqueTaskTypes = tasks
+                      .map((task) => task.taskType.trim())
+                      .where((type) => type.isNotEmpty)
+                      .toSet()
+                      .toList()
+                    ..sort();
+
+                  if (uniqueTaskTypes.isEmpty) {
+                    return Text(AppTranslations.t(context, 'noTaskTypesYet'));
+                  }
+
+                  final selectedTaskType =
+                      uniqueTaskTypes.contains(_selectedTaskType)
+                          ? _selectedTaskType
+                          : null;
+
+                  return DropdownButtonFormField<String>(
+                    value: selectedTaskType,
                     hint: Text(
                       AppTranslations.t(context, 'allTaskTypes'),
                       style: Appstyles.subtitleTextStyle,
@@ -181,58 +194,69 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                     isExpanded: true,
                     menuMaxHeight: 200,
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
-                        borderSide: BorderSide(color: Appstyles.lightBlue, width: 1.5),
+                        borderRadius: BorderRadius.circular(
+                            Appstyles.borderRadiusSmall),
+                        borderSide: BorderSide(
+                            color: Appstyles.lightBlue, width: 1.5),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
-                        borderSide: BorderSide(color: Appstyles.lightBlue, width: 1.5),
+                        borderRadius: BorderRadius.circular(
+                            Appstyles.borderRadiusSmall),
+                        borderSide: BorderSide(
+                            color: Appstyles.lightBlue, width: 1.5),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Appstyles.borderRadiusSmall),
-                        borderSide: BorderSide(color: Appstyles.primaryBlue, width: 2),
+                        borderRadius: BorderRadius.circular(
+                            Appstyles.borderRadiusSmall),
+                        borderSide: BorderSide(
+                            color: Appstyles.primaryBlue, width: 2),
                       ),
                       filled: true,
                       fillColor: Appstyles.white,
                       isDense: true,
                     ),
-                    style: Appstyles.normalTextStyle.copyWith(color: Appstyles.textDark),
+                    style: Appstyles.normalTextStyle
+                        .copyWith(color: Appstyles.textDark),
                     dropdownColor: Appstyles.white,
-                        icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF0066CC)),
-                  items: [
-                    DropdownMenuItem<String>(
-                      value: null,
-                      child: Text(
-                        AppTranslations.t(context, 'allTaskTypes'),
-                        style: Appstyles.normalTextStyle,
+                    icon: const Icon(Icons.arrow_drop_down,
+                        color: Color(0xFF0066CC)),
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: null,
+                        child: Text(
+                          AppTranslations.t(context, 'allTaskTypes'),
+                          style: Appstyles.normalTextStyle,
+                        ),
                       ),
-                    ),
-                    ...tasks
-                        .map(
-                          (t) => DropdownMenuItem(
-                            value: t.name,
-                            child: Text(
-                              t.name,
-                              style: Appstyles.normalTextStyle.copyWith(color: Appstyles.textDark),
-                            ),
+                      ...uniqueTaskTypes.map(
+                        (type) => DropdownMenuItem(
+                          value: type,
+                          child: Text(
+                            type,
+                            style: Appstyles.normalTextStyle
+                                .copyWith(color: Appstyles.textDark),
                           ),
-                        )
-                        .toList(),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedTaskType = value;
-                    });
-                  },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Text(
-                AppTranslations.t(context, 'taskTypesLoadErrorFilter'),
-              ),
-            ),
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedTaskType = value;
+                      });
+                    },
+                  );
+                },
+                loading: () =>
+                    const Center(child: CircularProgressIndicator()),
+                error: (_, __) => Text(
+                  AppTranslations.t(context, 'taskTypesLoadErrorFilter'),
+                ),
+              )
+            else
+              Text(AppTranslations.t(context, 'noTaskTypesYet')),
 
             const SizedBox(height: 10),
 
