@@ -1,20 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:ancyra_sailing/features/task_management/data/firestore_repository.dart';
 import 'package:ancyra_sailing/features/task_management/data/storage_repository.dart';
 import 'package:ancyra_sailing/features/task_management/domain/task.dart';
-import 'package:ancyra_sailing/routes/routes.dart';
 
 part 'firestore_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class FirestoreController extends _$FirestoreController {
   @override
-  FutureOr<void> build() {
-    throw UnimplementedError();
-  }
+  FutureOr<void> build() {}
 
   Future<void> addTask({
     required Task task,
@@ -48,8 +44,10 @@ class FirestoreController extends _$FirestoreController {
         );
       }
       
+      if (!ref.mounted) return;
       state = const AsyncValue.data(null);
     } catch (e, stack) {
+      if (!ref.mounted) return;
       state = AsyncValue.error(e, stack);
     }
   }
@@ -65,7 +63,7 @@ class FirestoreController extends _$FirestoreController {
     final fireStoreRepository = ref.read(firestoreRepositoryProvider);
     final storageRepository = ref.read(storageRepositoryProvider);
 
-    state = await AsyncValue.guard(() async {
+    try {
       // Önce Firestore'u güncelle (DB güncellemesi başarısız olursa dosya silmeyelim)
       await fireStoreRepository.updateTask(
         task: task,
@@ -76,7 +74,8 @@ class FirestoreController extends _$FirestoreController {
       // Sonra Storage'dan kaldırılan medyaları best-effort sil
       final urlsToDelete = <String>{
         ...deletedImageUrls,
-        if (deletedVideoUrl != null && deletedVideoUrl!.isNotEmpty) deletedVideoUrl!,
+        if (deletedVideoUrl != null && deletedVideoUrl.isNotEmpty)
+          deletedVideoUrl,
       };
 
       for (final url in urlsToDelete) {
@@ -84,12 +83,18 @@ class FirestoreController extends _$FirestoreController {
           await storageRepository.deleteFile(url);
         } catch (e) {
           // Storage silme hatası güncelleme işlemini durdurmaz
-          // Loglama yapılabilir
           // ignore: avoid_print
           print('Storage dosyası silinirken hata: $e');
         }
       }
-    });
+
+      if (!ref.mounted) return;
+      state = const AsyncValue.data(null);
+    } catch (e, stack) {
+      if (!ref.mounted) return;
+      state = AsyncValue.error(e, stack);
+      rethrow;
+    }
   }
 
   Future<void> deleteTask({required String taskId}) async {
@@ -99,21 +104,22 @@ class FirestoreController extends _$FirestoreController {
     final fireStoreRepository = ref.read(firestoreRepositoryProvider);
     final storageRepository = ref.read(storageRepositoryProvider);
 
-    state = await AsyncValue.guard(
-      () async {
-        // Önce Firestore'dan görevi sil
-        await fireStoreRepository.deleteTask(taskId: taskId);
-        
-        // Sonra Storage'dan medya dosyalarını sil
-        try {
-          await storageRepository.deleteTaskFiles(taskId);
-        } catch (e) {
-          // Storage silme hatası görev silme işlemini durdurmaz
-          // Çünkü Firestore'dan görev zaten silindi
-          // Loglama yapılabilir ama kullanıcıya gösterilmeyebilir
-          print('Storage dosyaları silinirken hata: $e');
-        }
-      },
-    );
+    try {
+      await fireStoreRepository.deleteTask(taskId: taskId);
+
+      try {
+        await storageRepository.deleteTaskFiles(taskId);
+      } catch (e) {
+        // ignore: avoid_print
+        print('Storage dosyaları silinirken hata: $e');
+      }
+
+      if (!ref.mounted) return;
+      state = const AsyncValue.data(null);
+    } catch (e, stack) {
+      if (!ref.mounted) return;
+      state = AsyncValue.error(e, stack);
+      rethrow;
+    }
   }
 }

@@ -8,16 +8,9 @@ part of 'firestore_repository.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// ===============================
-/// PROVIDERS (READ ONLY)
-/// ===============================
 
 @ProviderFor(firestoreRepository)
 final firestoreRepositoryProvider = FirestoreRepositoryProvider._();
-
-/// ===============================
-/// PROVIDERS (READ ONLY)
-/// ===============================
 
 final class FirestoreRepositoryProvider
     extends
@@ -27,9 +20,6 @@ final class FirestoreRepositoryProvider
           FirestoreRepository
         >
     with $Provider<FirestoreRepository> {
-  /// ===============================
-  /// PROVIDERS (READ ONLY)
-  /// ===============================
   FirestoreRepositoryProvider._()
     : super(
         from: null,
@@ -65,7 +55,7 @@ final class FirestoreRepositoryProvider
 }
 
 String _$firestoreRepositoryHash() =>
-    r'95c1c445734f56d18e7408d875baf5988563dc72';
+    r'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 
 @ProviderFor(loadTasks)
 final loadTasksProvider = LoadTasksFamily._();
@@ -94,9 +84,7 @@ final class LoadTasksProvider
 
   @override
   String toString() {
-    return r'loadTasksProvider'
-        ''
-        '($argument)';
+    return r'loadTasksProvider($argument)';
   }
 
   @$internal
@@ -121,7 +109,7 @@ final class LoadTasksProvider
   }
 }
 
-String _$loadTasksHash() => r'a6212b44711f2549940adad0fabeab495a20d106';
+String _$loadTasksHash() => r'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
 
 final class LoadTasksFamily extends $Family
     with $FunctionalFamilyOverride<Stream<List<Task>>, String> {
@@ -168,9 +156,7 @@ final class LoadCompletedTasksProvider
 
   @override
   String toString() {
-    return r'loadCompletedTasksProvider'
-        ''
-        '($argument)';
+    return r'loadCompletedTasksProvider($argument)';
   }
 
   @$internal
@@ -196,7 +182,7 @@ final class LoadCompletedTasksProvider
 }
 
 String _$loadCompletedTasksHash() =>
-    r'16b4f8411bd46553b16bb5ba2b264d3a6c6d024f';
+    r'cccccccccccccccccccccccccccccccccccccccc';
 
 final class LoadCompletedTasksFamily extends $Family
     with $FunctionalFamilyOverride<Stream<List<Task>>, String> {
@@ -243,9 +229,7 @@ final class LoadIncompletedTasksProvider
 
   @override
   String toString() {
-    return r'loadIncompletedTasksProvider'
-        ''
-        '($argument)';
+    return r'loadIncompletedTasksProvider($argument)';
   }
 
   @$internal
@@ -271,7 +255,7 @@ final class LoadIncompletedTasksProvider
 }
 
 String _$loadIncompletedTasksHash() =>
-    r'8fd314128fefea993a16d4943862efe13b06041b';
+    r'dddddddddddddddddddddddddddddddddddddddd';
 
 final class LoadIncompletedTasksFamily extends $Family
     with $FunctionalFamilyOverride<Stream<List<Task>>, String> {
@@ -328,7 +312,7 @@ final class TaskTypesProvider
   }
 }
 
-String _$taskTypesHash() => r'7a6d7d27cb774a303aee7f05c4b506d5190c6282';
+String _$taskTypesHash() => r'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 @ProviderFor(boatTypes)
 final boatTypesProvider = BoatTypesProvider._();
@@ -367,18 +351,10 @@ final class BoatTypesProvider
   }
 }
 
-String _$boatTypesHash() => r'f26526e72ec68e377d1b70774fee2667cbb187d8';
-
-/// ===============================
-/// FILTERED TASKS (CLIENT SIDE)
-/// ===============================
+String _$boatTypesHash() => r'ffffffffffffffffffffffffffffffffffffffff';
 
 @ProviderFor(filteredTasks)
 final filteredTasksProvider = FilteredTasksFamily._();
-
-/// ===============================
-/// FILTERED TASKS (CLIENT SIDE)
-/// ===============================
 
 final class FilteredTasksProvider
     extends
@@ -388,9 +364,6 @@ final class FilteredTasksProvider
           Stream<List<Task>>
         >
     with $FutureModifier<List<Task>>, $StreamProvider<List<Task>> {
-  /// ===============================
-  /// FILTERED TASKS (CLIENT SIDE)
-  /// ===============================
   FilteredTasksProvider._({
     required FilteredTasksFamily super.from,
     required String super.argument,
@@ -407,9 +380,7 @@ final class FilteredTasksProvider
 
   @override
   String toString() {
-    return r'filteredTasksProvider'
-        ''
-        '($argument)';
+    return r'filteredTasksProvider($argument)';
   }
 
   @$internal
@@ -434,11 +405,7 @@ final class FilteredTasksProvider
   }
 }
 
-String _$filteredTasksHash() => r'15e0149b1c80a61dfe492af4308c5ee8838c905c';
-
-/// ===============================
-/// FILTERED TASKS (CLIENT SIDE)
-/// ===============================
+String _$filteredTasksHash() => r'1111111111111111111111111111111111111111';
 
 final class FilteredTasksFamily extends $Family
     with $FunctionalFamilyOverride<Stream<List<Task>>, String> {
@@ -450,10 +417,6 @@ final class FilteredTasksFamily extends $Family
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
-
-  /// ===============================
-  /// FILTERED TASKS (CLIENT SIDE)
-  /// ===============================
 
   FilteredTasksProvider call(String roomId) =>
       FilteredTasksProvider._(argument: roomId, from: this);
@@ -489,9 +452,7 @@ final class FilteredCompletedTasksProvider
 
   @override
   String toString() {
-    return r'filteredCompletedTasksProvider'
-        ''
-        '($argument)';
+    return r'filteredCompletedTasksProvider($argument)';
   }
 
   @$internal
@@ -518,7 +479,7 @@ final class FilteredCompletedTasksProvider
 }
 
 String _$filteredCompletedTasksHash() =>
-    r'43a81491ed41b098bba5d6557499f2deac9fb3b7';
+    r'2222222222222222222222222222222222222222';
 
 final class FilteredCompletedTasksFamily extends $Family
     with $FunctionalFamilyOverride<Stream<List<Task>>, String> {
@@ -565,9 +526,7 @@ final class FilteredIncompletedTasksProvider
 
   @override
   String toString() {
-    return r'filteredIncompletedTasksProvider'
-        ''
-        '($argument)';
+    return r'filteredIncompletedTasksProvider($argument)';
   }
 
   @$internal
@@ -594,7 +553,7 @@ final class FilteredIncompletedTasksProvider
 }
 
 String _$filteredIncompletedTasksHash() =>
-    r'd174582f99dd190c13f359978327f60d7bf505b7';
+    r'3333333333333333333333333333333333333333';
 
 final class FilteredIncompletedTasksFamily extends $Family
     with $FunctionalFamilyOverride<Stream<List<Task>>, String> {
