@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '207240695163',
     projectId: 'ancyra-to-do',
     storageBucket: 'ancyra-to-do.firebasestorage.app',
-    iosBundleId: 'com.ancyra.todo',
+    iosBundleId: 'com.ancyra.sailing',
   );
 }
